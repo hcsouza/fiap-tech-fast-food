@@ -4,23 +4,23 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/cliente"
+	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/customer"
 )
 
-type clienteHandler struct {
-	interactor cliente.IClienteUseCase
+type customerHandler struct {
+	interactor customer.ICustomerUseCase
 }
 
-func NewClienteHandler(gRouter *gin.RouterGroup, interactor cliente.IClienteUseCase) {
-	handler := &clienteHandler{
+func NewCustomerHandler(gRouter *gin.RouterGroup, interactor customer.ICustomerUseCase) {
+	handler := &customerHandler{
 		interactor: interactor,
 	}
 
-	gRouter.GET("/clientes", handler.GetClientesHandler)
+	gRouter.GET("/customers", handler.GetCustomersHandler)
 
 }
 
-func (handler *clienteHandler) GetClientesHandler(c *gin.Context) {
+func (handler *customerHandler) GetCustomersHandler(c *gin.Context) {
 
 	actions, err := handler.interactor.GetAll(c.Request.Context())
 	if err != nil {
