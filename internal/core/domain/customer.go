@@ -7,5 +7,5 @@ import (
 type Customer struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
-	CPF   CPF
+	CPF   CPF    `json:"cpf"`
 }
