@@ -1,5 +1,7 @@
 package cpf
 
+import "slices"
+
 type CPF string
 
 func (cpf CPF) IsValid() bool {
@@ -8,8 +10,20 @@ func (cpf CPF) IsValid() bool {
 	var weight int
 	var firstDigit int
 	var secondDigit int
+	blockList := []string{
+		"00000000000",
+		"11111111111",
+		"22222222222",
+		"33333333333",
+		"44444444444",
+		"55555555555",
+		"66666666666",
+		"77777777777",
+		"88888888888",
+		"99999999999",
+	}
 
-	if cpf == "00000000000" {
+	if slices.Contains(blockList, string(cpf)) {
 		return false
 	}
 
