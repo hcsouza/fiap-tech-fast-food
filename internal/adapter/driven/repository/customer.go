@@ -26,6 +26,10 @@ func (cr customerRepository) Find(cpf CPF) (*domain.Customer, error) {
 		return nil, err
 	}
 
+	if customer == nil {
+		return nil, nil
+	}
+
 	return customer.(*domain.Customer), nil
 }
 
