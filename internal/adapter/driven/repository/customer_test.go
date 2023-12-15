@@ -11,8 +11,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var databaseAdapter *mocks.MockDatabaseAdapter
+
+func TestMain(m *testing.M) {
+	databaseAdapter = &mocks.MockDatabaseAdapter{}
+}
+
 func TestCustomerRepository(t *testing.T) {
-	databaseAdapter := &mocks.MockDatabaseAdapter{}
 	t.Run("Should find a customer by CPF", func(t *testing.T) {
 		cpf := CPF("12345678900")
 
