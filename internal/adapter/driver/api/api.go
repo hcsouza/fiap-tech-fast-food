@@ -14,6 +14,7 @@ func Run(gServer *gin.Engine) {
 	)
 
 	RegisterHealthRoutes(gServer)
+	RegisterSwaggerRoutes(gServer)
 
 	api := gServer.Group("/api")
 	routes.RegisterBusinessRoutes(api)
