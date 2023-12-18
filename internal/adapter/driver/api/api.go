@@ -18,5 +18,9 @@ func Run(gServer *gin.Engine) {
 	api := gServer.Group("/api")
 	routes.RegisterBusinessRoutes(api)
 
-	gServer.Run(fmt.Sprintf(":%s", "8080"))
+	err := gServer.Run(fmt.Sprintf(":%s", "8080"))
+
+	if err != nil {
+		panic(err)
+	}
 }
