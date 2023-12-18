@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/customer"
 )
 
@@ -20,13 +21,22 @@ func NewCustomerHandler(gRouter *gin.RouterGroup, interactor customer.ICustomerU
 
 }
 
+// Get All Customers godoc
+// @Summary Get all customers
+// @Description Get all customers
+// @Tags Customer Routes
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} domain.Customer{}
+// @Router /api/v1/customers [get]
 func (handler *customerHandler) GetCustomersHandler(c *gin.Context) {
+	var customers []domain.Customer
 
-	actions, err := handler.interactor.GetAll(c.Request.Context())
+	customers, err := handler.interactor.GetAll(c.Request.Context())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, actions)
+	c.JSON(http.StatusOK, customers)
 }
