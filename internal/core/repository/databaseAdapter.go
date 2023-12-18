@@ -1,4 +1,4 @@
-package interfaces
+package repository
 
 type IDatabaseAdapter interface {
 	FindOne(value string) (interface{}, error)

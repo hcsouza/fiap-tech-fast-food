@@ -1,21 +1,16 @@
 package repository
 
 import (
-	"github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driven/interfaces"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
+	"github.com/hcsouza/fiap-tech-fast-food/internal/core/repository"
 	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/cpf"
 )
 
-type CustomerRespository interface {
-	Find(cpf CPF) (*domain.Customer, error)
-	Save(customer *domain.Customer) error
-}
-
 type customerRepository struct {
-	databaseAdapter interfaces.IDatabaseAdapter
+	databaseAdapter repository.IDatabaseAdapter
 }
 
-func NewCustomerRespository(databaseAdapter interfaces.IDatabaseAdapter) *customerRepository {
+func NewCustomerRespository(databaseAdapter repository.IDatabaseAdapter) *customerRepository {
 	return &customerRepository{databaseAdapter: databaseAdapter}
 }
 
