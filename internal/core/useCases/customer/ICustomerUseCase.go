@@ -13,7 +13,7 @@ type CustomerCreateRequest struct {
 }
 
 type ICustomerUseCase interface {
-	GetAll(context.Context) ([]domain.Customer, error)
+	FindAll(context.Context) ([]domain.Customer, error)
 	CreateCustomer(context.Context, CustomerCreateRequest) (domain.Customer, error)
 	GetCustomer(ctx context.Context, params map[string]string) (domain.Customer, error)
 }

@@ -18,8 +18,8 @@ func NewCustomerUseCase(repo repositories.ICustomerRepository) ICustomerUseCase 
 	}
 }
 
-func (interactor *customerUseCase) GetAll(ctx context.Context) ([]domain.Customer, error) {
-	return interactor.repository.GetAllCustomers(ctx)
+func (interactor *customerUseCase) FindAll(ctx context.Context) ([]domain.Customer, error) {
+	return interactor.repository.FindAll(ctx)
 }
 
 func (interactor *customerUseCase) CreateCustomer(ctx context.Context, customerRequest CustomerCreateRequest) (domain.Customer, error) {
@@ -30,10 +30,10 @@ func (interactor *customerUseCase) CreateCustomer(ctx context.Context, customerR
 		CPF:   cpf.CPF(customerRequest.Cpf),
 	}
 
-	created, err := interactor.repository.AddCustomer(ctx, customerToCreate)
+	created, err := interactor.repository.Create(ctx, customerToCreate)
 	return created, err
 }
 
 func (interactor *customerUseCase) GetCustomer(ctx context.Context, params map[string]string) (domain.Customer, error) {
-	return interactor.repository.GetCustomerWithParams(ctx, params)
+	return interactor.repository.Find(ctx, params)
 }
