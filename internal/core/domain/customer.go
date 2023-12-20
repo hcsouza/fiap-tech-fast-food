@@ -10,3 +10,7 @@ type Customer struct {
 	Email Email  `json:"email"`
 	CPF   CPF    `json:"cpf"`
 }
+
+func (c Customer) CollectionName() string {
+	return "customer"
+}

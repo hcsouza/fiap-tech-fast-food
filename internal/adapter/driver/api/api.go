@@ -17,7 +17,7 @@ func Run(gServer *gin.Engine, dbClient mongo.Client) {
 	RegisterHealthRoutes(gServer)
 
 	api := gServer.Group("/api")
-	routes.RegisterBusinessRoutes(api)
+	routes.RegisterBusinessRoutes(api, dbClient)
 
 	gServer.Run(fmt.Sprintf(":%s", "8080"))
 }

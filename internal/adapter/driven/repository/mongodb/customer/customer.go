@@ -15,7 +15,7 @@ func NewCustomerRespository(databaseAdapter repository.IDatabaseAdapter) *custom
 }
 
 func (cr customerRepository) Find(cpf CPF) (*domain.Customer, error) {
-	customer, err := cr.databaseAdapter.FindOne(string(cpf))
+	customer, err := cr.databaseAdapter.FindOne("cpf", string(cpf))
 
 	if err != nil {
 		return nil, err
@@ -29,11 +29,12 @@ func (cr customerRepository) Find(cpf CPF) (*domain.Customer, error) {
 }
 
 func (cr customerRepository) Save(customer *domain.Customer) error {
-	err := cr.databaseAdapter.Save(
+	_, err := cr.databaseAdapter.Save(
 		string(customer.CPF),
 		map[string]interface{}{
 			"name":  customer.Name,
 			"email": customer.Email,
+			"cpf":   customer.CPF,
 		},
 	)
 

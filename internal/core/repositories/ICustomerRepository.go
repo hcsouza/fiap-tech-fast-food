@@ -9,5 +9,4 @@ import (
 type ICustomerRepository interface {
 	Create(ctx context.Context, customerToCreate domain.Customer) (domain.Customer, error)
 	Find(ctx context.Context, params map[string]string) (domain.Customer, error)
-	FindAll(ctx context.Context) ([]domain.Customer, error)
 }

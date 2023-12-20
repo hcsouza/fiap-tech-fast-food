@@ -24,5 +24,5 @@ func main() {
 	}()
 
 	gServer := gin.New()
-	api.Run(gServer)
+	api.Run(gServer, mongoClient)
 }

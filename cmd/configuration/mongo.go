@@ -8,11 +8,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func InitMongoDbConfiguration(context.Context) (mongo.Client, error) {
+func InitMongoDbConfiguration(ctx context.Context) (mongo.Client, error) {
 
 	client, err := mongo.Connect(
-		context.TODO(),
-		options.Client().ApplyURI("mongodb://localhost:27017"))
+		ctx,
+		options.Client().ApplyURI("mongodb://172.24.0.2:27017"),
+	)
 
 	if err != nil {
 		log.Fatal(err)
