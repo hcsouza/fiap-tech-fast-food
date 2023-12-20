@@ -10,10 +10,10 @@ import (
 )
 
 type customerUseCase struct {
-	repository repository.CustomerRespository
+	repository repository.CustomerRepository
 }
 
-func NewCustomerUseCase(repo repository.CustomerRespository) ICustomerUseCase {
+func NewCustomerUseCase(repo repository.CustomerRepository) ICustomerUseCase {
 	return &customerUseCase{
 		repository: repo,
 	}

@@ -10,7 +10,7 @@ type customerRepository struct {
 	databaseAdapter repository.IDatabaseAdapter
 }
 
-func NewCustomerRespository(databaseAdapter repository.IDatabaseAdapter) *customerRepository {
+func NewCustomerRepository(databaseAdapter repository.IDatabaseAdapter) *customerRepository {
 	return &customerRepository{databaseAdapter: databaseAdapter}
 }
 

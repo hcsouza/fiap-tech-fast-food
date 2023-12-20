@@ -16,7 +16,7 @@ func RegisterBusinessRoutes(gServer *gin.RouterGroup, dbClient mongo.Client) {
 }
 
 func registerCustomerHandler(groupServer *gin.RouterGroup, dbClient mongo.Client) {
-	repo := customerDB.NewCustomerRespository(
+	repo := customerDB.NewCustomerRepository(
 		adapterDB.NewMongoAdapter[domain.Customer](dbClient, domain.Customer{}.CollectionName()),
 	)
 
