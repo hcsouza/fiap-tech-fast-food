@@ -14,9 +14,7 @@ func TestCPF(t *testing.T) {
 	t.Run("should return true when cpf is valid", func(t *testing.T) {
 		cpf := CPF("19119119100")
 
-		if !cpf.IsValid() {
-			t.Errorf("expected cpf %s to be valid", cpf)
-		}
+		assert.True(t, cpf.IsValid())
 	})
 	t.Run("should return false when cpf is invalid", func(t *testing.T) {
 		cpf := CPF("12345678910")
