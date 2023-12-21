@@ -2,6 +2,7 @@ package configuration
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 
@@ -9,6 +10,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/hcsouza/fiap-tech-fast-food/internal/adapter/infra/config"
+)
+
+var (
+	mongoClient *mongo.Client
 )
 
 func InitMongoDbConfiguration(ctx context.Context) (mongo.Client, error) {
@@ -25,5 +30,13 @@ func InitMongoDbConfiguration(ctx context.Context) (mongo.Client, error) {
 		log.Fatal(err)
 	}
 
+	mongoClient = client
 	return *client, err
+}
+
+func GetMongoClient() (mongo.Client, error) {
+	if mongoClient != nil {
+		return *mongoClient, nil
+	}
+	return mongo.Client{}, errors.New("mongo client not initialized")
 }
