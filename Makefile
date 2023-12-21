@@ -1,5 +1,5 @@
 run:
-	@go run internal/main.go
+	@go run cmd/go-command.go
 
 install:
 	@cd $(GOPATH) && go install github.com/swaggo/swag/cmd/swag@latest; \
