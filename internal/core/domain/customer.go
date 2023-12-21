@@ -11,6 +11,10 @@ type Customer struct {
 	CPF   CPF    `json:"cpf"`
 }
 
+func (c *Customer) IsValid() bool {
+	return len(c.Name) > 0 && c.Email.IsValid() && c.CPF.IsValid()
+}
+
 func (c Customer) CollectionName() string {
 	return "customer"
 }
