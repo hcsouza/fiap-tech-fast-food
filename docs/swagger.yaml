@@ -1,6 +1,6 @@
 basePath: /
 definitions:
-  domain.Customer:
+  github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer:
     properties:
       cpf:
         type: string
@@ -28,7 +28,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/domain.Customer'
+              $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer'
             type: array
       summary: Get all customers
       tags:

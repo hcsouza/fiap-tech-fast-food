@@ -6,4 +6,4 @@ install:
 	go mod tidy
 
 serve-swagger:
-	@swag init --dir internal
+	@swag init -g cmd/go-command.go --parseDependency

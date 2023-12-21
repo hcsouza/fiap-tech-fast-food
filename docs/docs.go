@@ -34,7 +34,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/domain.Customer"
+                                "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer"
                             }
                         }
                     }
@@ -89,7 +89,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "domain.Customer": {
+        "github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer": {
             "type": "object",
             "properties": {
                 "cpf": {
