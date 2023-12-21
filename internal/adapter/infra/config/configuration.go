@@ -1,9 +1,9 @@
 package config
 
 import (
-	"encoding/json"
 	"fmt"
 	"path"
+	"strings"
 	"sync"
 
 	"github.com/integralist/go-findroot/find"
@@ -17,17 +17,17 @@ var (
 )
 
 type Config struct {
-	MongoCfg MongoConfig `json:"mongodb" mapstructure:"mongodb"`
-	ApiCfg   Api         `json:"api" mapstructure:"api"`
+	MongoCfg MongoConfig `mapstructure:"mongodb"`
+	ApiCfg   Api         `mapstructure:"api"`
 }
 
 type MongoConfig struct {
-	Host string `json:"host" mapstructure:"host"`
-	Port string `json:"port" mapstructure:"port"`
+	Host string `mapstructure:"host"`
+	Port string `mapstructure:"port"`
 }
 
 type Api struct {
-	Port string `json:"port" mapstructure:"port"`
+	Port string `mapstructure:"port"`
 }
 
 func init() {
@@ -48,6 +48,7 @@ func setupConfig() *Config {
 		root, _ := find.Repo()
 		configFilePath := path.Join(root.Path, "/internal/adapter/infra/config")
 
+		viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 		viper.AutomaticEnv()
 		viper.SetConfigName("configs")
 		viper.SetConfigType("yaml")
@@ -58,13 +59,8 @@ func setupConfig() *Config {
 			panic(fmt.Errorf("Erro fatal no arquivo de configuração: %w \n", err))
 		}
 
-		b, err := json.Marshal(viper.Get("configuration"))
-		if err != nil {
-			panic(err)
-		}
-
 		var appConfig Config
-		err = json.Unmarshal(b, &appConfig)
+		err = viper.Unmarshal(&appConfig)
 		if err != nil {
 			panic(err)
 		}
