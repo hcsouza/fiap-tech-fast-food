@@ -17,8 +17,8 @@ type mongoAdapter[T any] struct {
 	domain         T
 }
 
-func NewMongoAdapter[T any](client mongo.Client, collectionName string) repository.IDatabaseAdapter {
-	collection := client.Database("db").Collection(collectionName)
+func NewMongoAdapter[T any](client mongo.Client, databaseName, collectionName string) repository.IDatabaseAdapter {
+	collection := client.Database(databaseName).Collection(collectionName)
 	return &mongoAdapter[T]{
 		collectionName: collectionName,
 		client:         client,

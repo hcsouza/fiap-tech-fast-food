@@ -1,5 +1,6 @@
 mongodb:
   host: "172.25.0.2"
   port: "27017"
+  database: "db"
 api:
   port: "8080"

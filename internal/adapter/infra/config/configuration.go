@@ -22,8 +22,9 @@ type Config struct {
 }
 
 type MongoConfig struct {
-	Host string `mapstructure:"host"`
-	Port string `mapstructure:"port"`
+	Host     string `mapstructure:"host"`
+	Port     string `mapstructure:"port"`
+	Database string `mapstructure:"database"`
 }
 
 type Api struct {
