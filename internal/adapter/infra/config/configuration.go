@@ -17,17 +17,17 @@ var (
 )
 
 type Config struct {
-	MongoCfg MongoConfig `json:"mongodb"`
-	ApiCfg   Api         `json:"api"`
+	MongoCfg MongoConfig `json:"mongodb" mapstructure:"mongodb"`
+	ApiCfg   Api         `json:"api" mapstructure:"api"`
 }
 
 type MongoConfig struct {
-	Host string `json:"host"`
-	Port string `json:"port"`
+	Host string `json:"host" mapstructure:"host"`
+	Port string `json:"port" mapstructure:"port"`
 }
 
 type Api struct {
-	Port string `json:"port"`
+	Port string `json:"port" mapstructure:"port"`
 }
 
 func init() {
