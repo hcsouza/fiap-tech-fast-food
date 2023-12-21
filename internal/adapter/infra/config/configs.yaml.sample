@@ -1,8 +1,5 @@
-configuration:
-  mongodb:
-    host: "172.25.0.2"
-    port: "27017"
-    user: "logs"
-    pass: "log123"
-  api:
-    port: "8080"
+mongodb:
+  host: "172.25.0.2"
+  port: "27017"
+api:
+  port: "8080"
