@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin/binding"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/customer"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/cpf"
 )
@@ -62,7 +61,6 @@ func (handler *customerHandler) CreateCustomerHandler(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, customer)
 }
 
-func (handler *customerHandler) GetCustomersHandler(ctx *gin.Context) {
 // Get All Customers godoc
 // @Summary Get all customers
 // @Description Get all customers
@@ -71,12 +69,11 @@ func (handler *customerHandler) GetCustomersHandler(ctx *gin.Context) {
 // @Produce  json
 // @Success 200 {array} domain.Customer{}
 // @Router /api/v1/customers [get]
-func (handler *customerHandler) GetCustomersHandler(c *gin.Context) {
+func (handler *customerHandler) GetCustomersHandler(ctx *gin.Context) {
 	cpf := ctx.Query("cpf")
 	params := map[string]string{"cpf": cpf}
 
 	actions, err := handler.interactor.GetCustomer(ctx.Request.Context(), params)
-	customers, err := handler.interactor.GetAll(c.Request.Context())
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
