@@ -16,6 +16,7 @@ func Run(gServer *gin.Engine, dbClient mongo.Client) {
 	)
 
 	RegisterHealthRoutes(gServer)
+	RegisterSwaggerRoutes(gServer)
 
 	api := gServer.Group("/api")
 	routes.RegisterBusinessRoutes(api, dbClient)
