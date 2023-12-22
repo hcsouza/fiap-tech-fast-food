@@ -40,7 +40,7 @@ func NewCustomerHandler(gRouter *gin.RouterGroup, interactor customer.ICustomerU
 
 func (handler *customerHandler) CreateCustomerHandler(ctx *gin.Context) {
 
-	var createRequest customer.CustomerCreateRequest
+	var createRequest customer.CustomerCreateDTO
 	err := ctx.ShouldBindJSON(&createRequest)
 
 	if err != nil {
@@ -62,11 +62,8 @@ func (handler *customerHandler) CreateCustomerHandler(ctx *gin.Context) {
 }
 
 func (handler *customerHandler) GetCustomersHandler(ctx *gin.Context) {
-
 	cpf := ctx.Query("cpf")
-	email := ctx.Query("email")
-
-	params := map[string]string{"cpf": cpf, "email": email}
+	params := map[string]string{"cpf": cpf}
 
 	actions, err := handler.interactor.GetCustomer(ctx.Request.Context(), params)
 	if err != nil {

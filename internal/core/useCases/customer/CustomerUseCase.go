@@ -23,7 +23,7 @@ func NewCustomerUseCase(repo repository.CustomerRepository) ICustomerUseCase {
 	}
 }
 
-func (interactor *customerUseCase) CreateCustomer(ctx context.Context, customerRequest CustomerCreateRequest) (*domain.Customer, error) {
+func (interactor *customerUseCase) CreateCustomer(ctx context.Context, customerRequest CustomerCreateDTO) (*domain.Customer, error) {
 
 	customerToCreate := domain.Customer{
 		Name:  customerRequest.Name,

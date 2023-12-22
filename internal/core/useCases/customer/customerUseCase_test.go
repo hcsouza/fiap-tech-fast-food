@@ -56,7 +56,7 @@ func TestCustomerUseCase(t *testing.T) {
 	})
 
 	t.Run("Should return error when a customer has invalid attributes", func(t *testing.T) {
-		createRequest := customer.CustomerCreateRequest{
+		createRequest := customer.CustomerCreateDTO{
 			Name:  "John Doe",
 			Email: "email.com",
 			Cpf:   "111",
@@ -72,7 +72,7 @@ func TestCustomerUseCase(t *testing.T) {
 	})
 
 	t.Run("Should create customer successfully when has valid attributes", func(t *testing.T) {
-		createRequest := customer.CustomerCreateRequest{
+		createRequest := customer.CustomerCreateDTO{
 			Name:  "John Doe",
 			Email: "john@email.com",
 			Cpf:   "35679254077",
