@@ -14,9 +14,14 @@ func Run(gServer *gin.Engine) {
 	)
 
 	RegisterHealthRoutes(gServer)
+	RegisterSwaggerRoutes(gServer)
 
 	api := gServer.Group("/api")
 	routes.RegisterBusinessRoutes(api)
 
-	gServer.Run(fmt.Sprintf(":%s", "8080"))
+	err := gServer.Run(fmt.Sprintf(":%s", "8080"))
+
+	if err != nil {
+		panic(err)
+	}
 }

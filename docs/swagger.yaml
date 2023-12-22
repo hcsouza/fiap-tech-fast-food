@@ -1,0 +1,66 @@
+basePath: /
+definitions:
+  github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer:
+    properties:
+      cpf:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Fast Food API for FIAP Tech course
+  title: Fast Food API
+  version: 0.1.0
+paths:
+  /api/v1/customers:
+    get:
+      consumes:
+      - application/json
+      description: Get all customers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer'
+            type: array
+      summary: Get all customers
+      tags:
+      - Customer Routes
+  /health/liveness:
+    get:
+      description: Liveness probe
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Liveness probe
+      tags:
+      - Health Routes
+  /health/readiness:
+    get:
+      description: Readiness probe
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Readiness probe
+      tags:
+      - Health Routes
+swagger: "2.0"
