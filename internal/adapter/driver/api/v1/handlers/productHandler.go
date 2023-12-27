@@ -48,7 +48,7 @@ func (handler *productHandler) CreateProductHandler(c *gin.Context) {
 		return
 	}
 
-	err := handler.interactor.Create(product)
+	err := handler.interactor.Create(&product)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

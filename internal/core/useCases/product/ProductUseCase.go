@@ -4,15 +4,18 @@ import (
 	"errors"
 
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
+	"github.com/hcsouza/fiap-tech-fast-food/internal/core/repository"
 	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/category"
 )
 
 type productUseCase struct {
-	productsCollection []domain.Product
+	repository repository.ProductRepository
 }
 
-func NewProductUseCase() IProductUseCase {
-	return &productUseCase{}
+func NewProductUseCase(repo repository.ProductRepository) IProductUseCase {
+	return &productUseCase{
+		repository: repo,
+	}
 }
 
 func (interactor *productUseCase) GetByCategory(category string) ([]domain.Product, error) {
@@ -35,7 +38,7 @@ func (interactor *productUseCase) GetByCategory(category string) ([]domain.Produ
 	return productsFromSearchCategory, nil
 }
 
-func (interactor *productUseCase) Create(product domain.Product) error {
+func (interactor *productUseCase) Create(product *domain.Product) error {
 	if product.Name == "" {
 		return errors.New("invalid product name")
 	}
@@ -48,7 +51,7 @@ func (interactor *productUseCase) Create(product domain.Product) error {
 		return errors.New("invalid product price")
 	}
 
-	interactor.productsCollection = append(interactor.productsCollection, product)
+	interactor.repository.Save(product)
 
 	return nil
 }
@@ -66,23 +69,23 @@ func (interactor *productUseCase) Update(productId string, product domain.Produc
 		return errors.New("invalid product price")
 	}
 
-	for index, product := range interactor.productsCollection {
-		if product.Name == productId { // Gerar UUID
-			interactor.productsCollection[index] = product
-			return nil
-		}
-	}
+	// for index, product := range interactor.productsCollection {
+	// 	if product.Name == productId { // Gerar UUID
+	// 		interactor.productsCollection[index] = product
+	// 		return nil
+	// 	}
+	// }
 
 	return errors.New("product not found")
 }
 
 func (interactor *productUseCase) Delete(productId string) error {
-	for index, product := range interactor.productsCollection {
-		if product.Name == productId { // Gerar UUID
-			interactor.productsCollection = append(interactor.productsCollection[:index], interactor.productsCollection[index+1:]...)
-			return nil
-		}
-	}
+	// for index, product := range interactor.productsCollection {
+	// 	if product.Name == productId { // Gerar UUID
+	// 		interactor.productsCollection = append(interactor.productsCollection[:index], interactor.productsCollection[index+1:]...)
+	// 		return nil
+	// 	}
+	// }
 
 	return errors.New("product not found")
 }
