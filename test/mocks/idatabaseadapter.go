@@ -17,6 +17,64 @@ func (_m *MockIDatabaseAdapter) EXPECT() *MockIDatabaseAdapter_Expecter {
 	return &MockIDatabaseAdapter_Expecter{mock: &_m.Mock}
 }
 
+// Delete provides a mock function with given fields: identifier
+func (_m *MockIDatabaseAdapter) Delete(identifier string) (interface{}, error) {
+	ret := _m.Called(identifier)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Delete")
+	}
+
+	var r0 interface{}
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (interface{}, error)); ok {
+		return rf(identifier)
+	}
+	if rf, ok := ret.Get(0).(func(string) interface{}); ok {
+		r0 = rf(identifier)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(interface{})
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(identifier)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockIDatabaseAdapter_Delete_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Delete'
+type MockIDatabaseAdapter_Delete_Call struct {
+	*mock.Call
+}
+
+// Delete is a helper method to define mock.On call
+//   - identifier string
+func (_e *MockIDatabaseAdapter_Expecter) Delete(identifier interface{}) *MockIDatabaseAdapter_Delete_Call {
+	return &MockIDatabaseAdapter_Delete_Call{Call: _e.mock.On("Delete", identifier)}
+}
+
+func (_c *MockIDatabaseAdapter_Delete_Call) Run(run func(identifier string)) *MockIDatabaseAdapter_Delete_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string))
+	})
+	return _c
+}
+
+func (_c *MockIDatabaseAdapter_Delete_Call) Return(id interface{}, err error) *MockIDatabaseAdapter_Delete_Call {
+	_c.Call.Return(id, err)
+	return _c
+}
+
+func (_c *MockIDatabaseAdapter_Delete_Call) RunAndReturn(run func(string) (interface{}, error)) *MockIDatabaseAdapter_Delete_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // FindOne provides a mock function with given fields: key, value
 func (_m *MockIDatabaseAdapter) FindOne(key string, value string) (interface{}, error) {
 	ret := _m.Called(key, value)
@@ -131,6 +189,65 @@ func (_c *MockIDatabaseAdapter_Save_Call) Return(id interface{}, err error) *Moc
 }
 
 func (_c *MockIDatabaseAdapter_Save_Call) RunAndReturn(run func(string, interface{}) (interface{}, error)) *MockIDatabaseAdapter_Save_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// Update provides a mock function with given fields: identifier, data
+func (_m *MockIDatabaseAdapter) Update(identifier string, data interface{}) (interface{}, error) {
+	ret := _m.Called(identifier, data)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Update")
+	}
+
+	var r0 interface{}
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, interface{}) (interface{}, error)); ok {
+		return rf(identifier, data)
+	}
+	if rf, ok := ret.Get(0).(func(string, interface{}) interface{}); ok {
+		r0 = rf(identifier, data)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(interface{})
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, interface{}) error); ok {
+		r1 = rf(identifier, data)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockIDatabaseAdapter_Update_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Update'
+type MockIDatabaseAdapter_Update_Call struct {
+	*mock.Call
+}
+
+// Update is a helper method to define mock.On call
+//   - identifier string
+//   - data interface{}
+func (_e *MockIDatabaseAdapter_Expecter) Update(identifier interface{}, data interface{}) *MockIDatabaseAdapter_Update_Call {
+	return &MockIDatabaseAdapter_Update_Call{Call: _e.mock.On("Update", identifier, data)}
+}
+
+func (_c *MockIDatabaseAdapter_Update_Call) Run(run func(identifier string, data interface{})) *MockIDatabaseAdapter_Update_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string), args[1].(interface{}))
+	})
+	return _c
+}
+
+func (_c *MockIDatabaseAdapter_Update_Call) Return(id interface{}, err error) *MockIDatabaseAdapter_Update_Call {
+	_c.Call.Return(id, err)
+	return _c
+}
+
+func (_c *MockIDatabaseAdapter_Update_Call) RunAndReturn(run func(string, interface{}) (interface{}, error)) *MockIDatabaseAdapter_Update_Call {
 	_c.Call.Return(run)
 	return _c
 }
