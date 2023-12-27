@@ -1,0 +1,42 @@
+package configuration
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"log"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+
+	"github.com/hcsouza/fiap-tech-fast-food/internal/adapter/infra/config"
+)
+
+var (
+	mongoClient *mongo.Client
+)
+
+func InitMongoDbConfiguration(ctx context.Context) (mongo.Client, error) {
+
+	mongoCfg := config.GetMongoCfg()
+	uri := fmt.Sprintf("mongodb://%s:%s", mongoCfg.Host, mongoCfg.Port)
+
+	client, err := mongo.Connect(
+		ctx,
+		options.Client().ApplyURI(uri),
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	mongoClient = client
+	return *client, err
+}
+
+func GetMongoClient() (mongo.Client, error) {
+	if mongoClient != nil {
+		return *mongoClient, nil
+	}
+	return mongo.Client{}, errors.New("mongo client not initialized")
+}

@@ -5,9 +5,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driver/api/v1/routes"
+	"github.com/hcsouza/fiap-tech-fast-food/internal/adapter/infra/config"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func Run(gServer *gin.Engine) {
+func Run(gServer *gin.Engine, dbClient mongo.Client) {
 	gServer.Use(
 		gin.LoggerWithWriter(gin.DefaultWriter, "/health/liveness", "/health/readiness"),
 		gin.Recovery(),
@@ -17,11 +19,7 @@ func Run(gServer *gin.Engine) {
 	RegisterSwaggerRoutes(gServer)
 
 	api := gServer.Group("/api")
-	routes.RegisterBusinessRoutes(api)
+	routes.RegisterBusinessRoutes(api, dbClient)
 
-	err := gServer.Run(fmt.Sprintf(":%s", "8080"))
-
-	if err != nil {
-		panic(err)
-	}
+	gServer.Run(fmt.Sprintf(":%s", config.GetApiCfg().Port))
 }
