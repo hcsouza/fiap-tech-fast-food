@@ -1,15 +1,31 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
+	"github.com/gin-gonic/gin/binding"
+
+	"github.com/go-playground/validator/v10"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/customer"
+	"github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/cpf"
 )
 
 type customerHandler struct {
 	interactor customer.ICustomerUseCase
+}
+
+const (
+	fieldErrMsg = "Invalid value for field: '%s'"
+)
+
+func init() {
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("IsCpfValid", CpfValidator)
+	}
 }
 
 func NewCustomerHandler(gRouter *gin.RouterGroup, interactor customer.ICustomerUseCase) {
@@ -18,7 +34,31 @@ func NewCustomerHandler(gRouter *gin.RouterGroup, interactor customer.ICustomerU
 	}
 
 	gRouter.GET("/customers", handler.GetCustomersHandler)
+	gRouter.POST("/customers", handler.CreateCustomerHandler)
 
+}
+
+func (handler *customerHandler) CreateCustomerHandler(ctx *gin.Context) {
+
+	var createRequest customer.CustomerCreateDTO
+	err := ctx.ShouldBindJSON(&createRequest)
+
+	if err != nil {
+		var verr validator.ValidationErrors
+		var msgFieldError string
+		if errors.As(err, &verr) {
+			msgFieldError = strings.Split(verr[0].Namespace(), ".")[1]
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf(fieldErrMsg, msgFieldError)})
+			return
+		}
+	}
+
+	customer, err := handler.interactor.CreateCustomer(ctx.Request.Context(), createRequest)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+	ctx.JSON(http.StatusCreated, customer)
 }
 
 // Get All Customers godoc
@@ -29,14 +69,25 @@ func NewCustomerHandler(gRouter *gin.RouterGroup, interactor customer.ICustomerU
 // @Produce  json
 // @Success 200 {array} domain.Customer{}
 // @Router /api/v1/customers [get]
-func (handler *customerHandler) GetCustomersHandler(c *gin.Context) {
-	var customers []domain.Customer
+func (handler *customerHandler) GetCustomersHandler(ctx *gin.Context) {
+	cpf := ctx.Query("cpf")
+	params := map[string]string{"cpf": cpf}
 
-	customers, err := handler.interactor.GetAll(c.Request.Context())
+	actions, err := handler.interactor.GetCustomer(ctx.Request.Context(), params)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, customers)
+	ctx.JSON(http.StatusOK, actions)
+}
+
+func CpfValidator(fl validator.FieldLevel) bool {
+	rawCpf, ok := fl.Field().Interface().(string)
+	cpfToValidate := cpf.CPF(rawCpf)
+
+	if ok {
+		return cpfToValidate.IsValid()
+	}
+	return false
 }

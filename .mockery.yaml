@@ -1,0 +1,14 @@
+quiet: False
+disable-version-string: True
+with-expecter: True
+mockname: "{{.InterfaceName}}"
+filename: "{{.InterfaceName | lower}}.go"
+outpkg: mocks
+packages:
+  github.com/hcsouza/fiap-tech-fast-food/internal/core/repository:
+    config:
+      dir: "test/mocks"
+      mockname: "Mock{{.InterfaceName}}"
+    interfaces:
+      CustomerRepository:
+      IDatabaseAdapter:

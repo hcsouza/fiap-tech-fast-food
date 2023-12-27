@@ -4,17 +4,17 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driven/repository"
+	repository "github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driven/repository/mongodb/customer"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/cpf"
 	"github.com/hcsouza/fiap-tech-fast-food/test/mocks"
 	"github.com/stretchr/testify/assert"
 )
 
-var databaseAdapter *mocks.MockDatabaseAdapter
+var databaseAdapter *mocks.MockIDatabaseAdapter
 
 func TestMain(m *testing.M) {
-	databaseAdapter = &mocks.MockDatabaseAdapter{}
+	databaseAdapter = &mocks.MockIDatabaseAdapter{}
 }
 
 func TestCustomerRepository(t *testing.T) {
@@ -23,7 +23,7 @@ func TestCustomerRepository(t *testing.T) {
 
 		databaseAdapter.On("FindOne", string(cpf)).Return(&domain.Customer{}, nil)
 
-		customerRepository := repository.NewCustomerRespository(databaseAdapter)
+		customerRepository := repository.NewCustomerRepository(databaseAdapter)
 
 		customer, err := customerRepository.Find(cpf)
 
@@ -35,7 +35,7 @@ func TestCustomerRepository(t *testing.T) {
 
 		databaseAdapter.On("FindOne", string(cpf)).Return(nil, nil)
 
-		customerRepository := repository.NewCustomerRespository(databaseAdapter)
+		customerRepository := repository.NewCustomerRepository(databaseAdapter)
 
 		customer, err := customerRepository.Find(cpf)
 
@@ -47,7 +47,7 @@ func TestCustomerRepository(t *testing.T) {
 
 		databaseAdapter.On("FindOne", string(cpf)).Return(nil, errors.New("something went wrong"))
 
-		customerRepository := repository.NewCustomerRespository(databaseAdapter)
+		customerRepository := repository.NewCustomerRepository(databaseAdapter)
 
 		customer, err := customerRepository.Find(cpf)
 
@@ -70,7 +70,7 @@ func TestCustomerRepository(t *testing.T) {
 			).
 			Return(nil)
 
-		customerRepository := repository.NewCustomerRespository(databaseAdapter)
+		customerRepository := repository.NewCustomerRepository(databaseAdapter)
 
 		err := customerRepository.Save(customer)
 
@@ -92,7 +92,7 @@ func TestCustomerRepository(t *testing.T) {
 			).
 			Return(errors.New("something went wrong"))
 
-		customerRepository := repository.NewCustomerRespository(databaseAdapter)
+		customerRepository := repository.NewCustomerRepository(databaseAdapter)
 
 		err := customerRepository.Save(customer)
 

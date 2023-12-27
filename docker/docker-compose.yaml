@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  mongoservice:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ${pwd}/docker/volumes/mongodb:/data/db
+    networks:
+      - mongo-compose-network
+
+networks: 
+    mongo-compose-network:
+      driver: bridge

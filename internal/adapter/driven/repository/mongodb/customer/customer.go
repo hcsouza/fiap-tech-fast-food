@@ -10,12 +10,12 @@ type customerRepository struct {
 	databaseAdapter repository.IDatabaseAdapter
 }
 
-func NewCustomerRespository(databaseAdapter repository.IDatabaseAdapter) *customerRepository {
+func NewCustomerRepository(databaseAdapter repository.IDatabaseAdapter) *customerRepository {
 	return &customerRepository{databaseAdapter: databaseAdapter}
 }
 
 func (cr customerRepository) Find(cpf CPF) (*domain.Customer, error) {
-	customer, err := cr.databaseAdapter.FindOne(string(cpf))
+	customer, err := cr.databaseAdapter.FindOne("_id", string(cpf))
 
 	if err != nil {
 		return nil, err
@@ -25,16 +25,19 @@ func (cr customerRepository) Find(cpf CPF) (*domain.Customer, error) {
 		return nil, nil
 	}
 
-	return customer.(*domain.Customer), nil
+	found := customer.(*domain.Customer)
+	composed := domain.Customer{
+		CPF:   cpf,
+		Name:  found.Name,
+		Email: found.Email,
+	}
+	return &composed, nil
 }
 
 func (cr customerRepository) Save(customer *domain.Customer) error {
-	err := cr.databaseAdapter.Save(
+	_, err := cr.databaseAdapter.Save(
 		string(customer.CPF),
-		map[string]interface{}{
-			"name":  customer.Name,
-			"email": customer.Email,
-		},
+		customer.ToMongo(),
 	)
 
 	if err != nil {
