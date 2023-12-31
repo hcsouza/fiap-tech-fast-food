@@ -1,16 +1,19 @@
 package category
 
-import "slices"
+import (
+	"slices"
+	"strings"
+)
 
 type Category string
 
 func (category Category) IsValid() bool {
 	categoryList := []string{
-		"Acompanhamento",
-		"Bebida",
-		"Lanche",
-		"Sobremesa",
+		"acompanhamento",
+		"bebida",
+		"lanche",
+		"sobremesa",
 	}
 
-	return slices.Contains(categoryList, string(category))
+	return slices.Contains(categoryList, strings.ToLower(string(category)))
 }

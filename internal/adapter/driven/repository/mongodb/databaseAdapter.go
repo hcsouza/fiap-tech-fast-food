@@ -26,6 +26,32 @@ func NewMongoAdapter[T any](client mongo.Client, databaseName, collectionName st
 	}
 }
 
+func (ad *mongoAdapter[T]) FindAll(fieldName, fieldValue string) ([]interface{}, error) {
+	ctx := context.TODO()
+	var results []T
+
+	cursor, err := ad.collection.Find(ctx, bson.D{})
+
+	if fieldName != "" && fieldValue != "" {
+		cursor, err = ad.collection.Find(ctx, bson.D{{Key: fieldName, Value: fieldValue}})
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err = cursor.All(ctx, &results); err != nil {
+		return nil, err
+	}
+
+	var interfaceResults []interface{}
+	for _, result := range results {
+		interfaceResults = append(interfaceResults, result)
+	}
+
+	return interfaceResults, nil
+}
+
 func (ad *mongoAdapter[T]) FindOne(key, value string) (interface{}, error) {
 	ctx := context.TODO()
 	var result T

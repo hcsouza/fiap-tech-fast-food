@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/repository"
+	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/category"
 )
 
 type productRepository struct {
@@ -11,6 +12,38 @@ type productRepository struct {
 
 func NewProductRepository(databaseAdapter repository.IDatabaseAdapter) *productRepository {
 	return &productRepository{databaseAdapter: databaseAdapter}
+}
+
+func (pr productRepository) FindAll() ([]domain.Product, error) {
+	products, err := pr.databaseAdapter.FindAll("", "")
+
+	if err != nil {
+		return nil, err
+	}
+
+	foundProducts := []domain.Product{}
+
+	for _, product := range products {
+		foundProducts = append(foundProducts, product.(domain.Product))
+	}
+
+	return foundProducts, nil
+}
+
+func (pr productRepository) FindAllByCategory(category Category) ([]domain.Product, error) {
+	products, err := pr.databaseAdapter.FindAll("category", string(category))
+
+	if err != nil {
+		return nil, err
+	}
+
+	foundProducts := []domain.Product{}
+
+	for _, product := range products {
+		foundProducts = append(foundProducts, *product.(*domain.Product))
+	}
+
+	return foundProducts, nil
 }
 
 func (pr productRepository) Find(id string) (*domain.Product, error) {

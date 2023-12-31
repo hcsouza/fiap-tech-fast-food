@@ -75,6 +75,65 @@ func (_c *MockIDatabaseAdapter_Delete_Call) RunAndReturn(run func(string) (inter
 	return _c
 }
 
+// FindAll provides a mock function with given fields: fieldName, fieldValue
+func (_m *MockIDatabaseAdapter) FindAll(fieldName string, fieldValue string) ([]interface{}, error) {
+	ret := _m.Called(fieldName, fieldValue)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindAll")
+	}
+
+	var r0 []interface{}
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, string) ([]interface{}, error)); ok {
+		return rf(fieldName, fieldValue)
+	}
+	if rf, ok := ret.Get(0).(func(string, string) []interface{}); ok {
+		r0 = rf(fieldName, fieldValue)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]interface{})
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, string) error); ok {
+		r1 = rf(fieldName, fieldValue)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockIDatabaseAdapter_FindAll_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'FindAll'
+type MockIDatabaseAdapter_FindAll_Call struct {
+	*mock.Call
+}
+
+// FindAll is a helper method to define mock.On call
+//   - fieldName string
+//   - fieldValue string
+func (_e *MockIDatabaseAdapter_Expecter) FindAll(fieldName interface{}, fieldValue interface{}) *MockIDatabaseAdapter_FindAll_Call {
+	return &MockIDatabaseAdapter_FindAll_Call{Call: _e.mock.On("FindAll", fieldName, fieldValue)}
+}
+
+func (_c *MockIDatabaseAdapter_FindAll_Call) Run(run func(fieldName string, fieldValue string)) *MockIDatabaseAdapter_FindAll_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string), args[1].(string))
+	})
+	return _c
+}
+
+func (_c *MockIDatabaseAdapter_FindAll_Call) Return(_a0 []interface{}, _a1 error) *MockIDatabaseAdapter_FindAll_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockIDatabaseAdapter_FindAll_Call) RunAndReturn(run func(string, string) ([]interface{}, error)) *MockIDatabaseAdapter_FindAll_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // FindOne provides a mock function with given fields: key, value
 func (_m *MockIDatabaseAdapter) FindOne(key string, value string) (interface{}, error) {
 	ret := _m.Called(key, value)

@@ -1,8 +1,6 @@
 package product
 
 import (
-	"errors"
-
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/repository"
 	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/category"
@@ -18,74 +16,54 @@ func NewProductUseCase(repo repository.ProductRepository) IProductUseCase {
 	}
 }
 
-func (interactor *productUseCase) GetByCategory(category string) ([]domain.Product, error) {
-	if !Category(category).IsValid() {
-		return nil, errors.New("invalid category")
+func (interactor *productUseCase) GetAll() ([]domain.Product, error) {
+	products, err := interactor.repository.FindAll()
+
+	if err != nil {
+		return nil, err
 	}
 
-	productsFromSearchCategory := []domain.Product{}
-	products := []domain.Product{
-		{Name: "X-Salada", Category: "Lanche", Price: 10.00},
-		{Name: "Refrigerante", Category: "Bebida", Price: 5.00},
+	return products, nil
+}
+
+func (interactor *productUseCase) GetByCategory(category Category) ([]domain.Product, error) {
+	products, err := interactor.repository.FindAllByCategory(category)
+
+	if err != nil {
+		return nil, err
 	}
 
-	for _, product := range products {
-		if product.Category == Category(category) {
-			productsFromSearchCategory = append(productsFromSearchCategory, product)
-		}
-	}
-
-	return productsFromSearchCategory, nil
+	return products, nil
 }
 
 func (interactor *productUseCase) Create(product *domain.Product) error {
-	if product.Name == "" {
-		return errors.New("invalid product name")
-	}
+	err := interactor.repository.Save(product.Normalize())
 
-	if product.Category == "" || !Category(product.Category).IsValid() {
-		return errors.New("invalid product category")
+	if err != nil {
+		return err
 	}
-
-	if product.Price <= 0 {
-		return errors.New("invalid product price")
-	}
-
-	interactor.repository.Save(product)
 
 	return nil
 }
 
-func (interactor *productUseCase) Update(productId string, product domain.Product) error {
-	if product.Name == "" {
-		return errors.New("invalid product name")
+func (interactor *productUseCase) Update(productId string, product *domain.Product) error {
+	product.ID = productId
+
+	err := interactor.repository.Update(product.Normalize())
+
+	if err != nil {
+		return err
 	}
 
-	if product.Category == "" || !Category(product.Category).IsValid() {
-		return errors.New("invalid product category")
-	}
-
-	if product.Price <= 0 {
-		return errors.New("invalid product price")
-	}
-
-	// for index, product := range interactor.productsCollection {
-	// 	if product.Name == productId { // Gerar UUID
-	// 		interactor.productsCollection[index] = product
-	// 		return nil
-	// 	}
-	// }
-
-	return errors.New("product not found")
+	return nil
 }
 
 func (interactor *productUseCase) Delete(productId string) error {
-	// for index, product := range interactor.productsCollection {
-	// 	if product.Name == productId { // Gerar UUID
-	// 		interactor.productsCollection = append(interactor.productsCollection[:index], interactor.productsCollection[index+1:]...)
-	// 		return nil
-	// 	}
-	// }
+	err := interactor.repository.Delete(productId)
 
-	return errors.New("product not found")
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

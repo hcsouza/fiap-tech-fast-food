@@ -37,7 +37,7 @@ func registerProductHandler(groupServer *gin.RouterGroup, dbClient mongo.Client)
 		adapterDB.NewMongoAdapter[domain.Product](
 			dbClient,
 			config.GetMongoCfg().Database,
-			domain.Customer{}.CollectionName(),
+			domain.Product{}.CollectionName(),
 		),
 	)
 
