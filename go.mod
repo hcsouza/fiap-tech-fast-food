@@ -12,7 +12,7 @@ require (
 	go.mongodb.org/mongo-driver v1.13.1
 )
 
-require github.com/google/uuid v1.5.0 // indirect
+require github.com/google/uuid v1.5.0
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
