@@ -134,9 +134,9 @@ func (_c *MockIDatabaseAdapter_FindOne_Call) RunAndReturn(run func(string, strin
 	return _c
 }
 
-// Save provides a mock function with given fields: identifier, data
-func (_m *MockIDatabaseAdapter) Save(identifier string, data interface{}) (interface{}, error) {
-	ret := _m.Called(identifier, data)
+// Save provides a mock function with given fields: data
+func (_m *MockIDatabaseAdapter) Save(data interface{}) (interface{}, error) {
+	ret := _m.Called(data)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Save")
@@ -144,19 +144,19 @@ func (_m *MockIDatabaseAdapter) Save(identifier string, data interface{}) (inter
 
 	var r0 interface{}
 	var r1 error
-	if rf, ok := ret.Get(0).(func(string, interface{}) (interface{}, error)); ok {
-		return rf(identifier, data)
+	if rf, ok := ret.Get(0).(func(interface{}) (interface{}, error)); ok {
+		return rf(data)
 	}
-	if rf, ok := ret.Get(0).(func(string, interface{}) interface{}); ok {
-		r0 = rf(identifier, data)
+	if rf, ok := ret.Get(0).(func(interface{}) interface{}); ok {
+		r0 = rf(data)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(interface{})
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(string, interface{}) error); ok {
-		r1 = rf(identifier, data)
+	if rf, ok := ret.Get(1).(func(interface{}) error); ok {
+		r1 = rf(data)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -170,15 +170,14 @@ type MockIDatabaseAdapter_Save_Call struct {
 }
 
 // Save is a helper method to define mock.On call
-//   - identifier string
 //   - data interface{}
-func (_e *MockIDatabaseAdapter_Expecter) Save(identifier interface{}, data interface{}) *MockIDatabaseAdapter_Save_Call {
-	return &MockIDatabaseAdapter_Save_Call{Call: _e.mock.On("Save", identifier, data)}
+func (_e *MockIDatabaseAdapter_Expecter) Save(data interface{}) *MockIDatabaseAdapter_Save_Call {
+	return &MockIDatabaseAdapter_Save_Call{Call: _e.mock.On("Save", data)}
 }
 
-func (_c *MockIDatabaseAdapter_Save_Call) Run(run func(identifier string, data interface{})) *MockIDatabaseAdapter_Save_Call {
+func (_c *MockIDatabaseAdapter_Save_Call) Run(run func(data interface{})) *MockIDatabaseAdapter_Save_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(string), args[1].(interface{}))
+		run(args[0].(interface{}))
 	})
 	return _c
 }
@@ -188,7 +187,7 @@ func (_c *MockIDatabaseAdapter_Save_Call) Return(id interface{}, err error) *Moc
 	return _c
 }
 
-func (_c *MockIDatabaseAdapter_Save_Call) RunAndReturn(run func(string, interface{}) (interface{}, error)) *MockIDatabaseAdapter_Save_Call {
+func (_c *MockIDatabaseAdapter_Save_Call) RunAndReturn(run func(interface{}) (interface{}, error)) *MockIDatabaseAdapter_Save_Call {
 	_c.Call.Return(run)
 	return _c
 }

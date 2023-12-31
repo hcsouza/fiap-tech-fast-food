@@ -31,7 +31,6 @@ func (pr productRepository) Find(id string) (*domain.Product, error) {
 
 func (pr productRepository) Save(product *domain.Product) error {
 	_, err := pr.databaseAdapter.Save(
-		product.ID,
 		product.ToMongo(),
 	)
 
