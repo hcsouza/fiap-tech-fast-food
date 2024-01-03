@@ -8,7 +8,7 @@ import (
 )
 
 type Product struct {
-	ID       string   `json:"id"`
+	ID       string   `json:"_id" bson:"_id"`
 	Name     string   `json:"name"`
 	Price    float64  `json:"price"`
 	Category Category `json:"category"`
@@ -39,9 +39,17 @@ func (p *Product) Normalize() *Product {
 	}
 }
 
-func (p *Product) ToMongo() map[string]interface{} {
+func (p *Product) ToSaveMongo() map[string]interface{} {
 	return map[string]interface{}{
 		"_id":      uuid.New().String(),
+		"name":     p.Name,
+		"price":    p.Price,
+		"category": p.Category,
+	}
+}
+
+func (p *Product) ToUpdateMongo() map[string]interface{} {
+	return map[string]interface{}{
 		"name":     p.Name,
 		"price":    p.Price,
 		"category": p.Category,
