@@ -84,6 +84,11 @@ func (ad *mongoAdapter[T]) Update(identifier string, data interface{}) (interfac
 	defer cancel()
 
 	res, err := ad.collection.UpdateOne(ctx, bson.M{"_id": identifier}, bson.D{{"$set", data}})
+
+	if err != nil {
+		return nil, err
+	}
+
 	return res.UpsertedID, err
 }
 
