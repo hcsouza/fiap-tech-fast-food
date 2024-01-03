@@ -17,6 +17,7 @@ import (
 func RegisterBusinessRoutes(gServer *gin.RouterGroup, dbClient mongo.Client) {
 	groupServer := gServer.Group("/v1")
 	registerCustomerHandler(groupServer, dbClient)
+	registerProductHandler(groupServer, dbClient)
 }
 
 func registerCustomerHandler(groupServer *gin.RouterGroup, dbClient mongo.Client) {
