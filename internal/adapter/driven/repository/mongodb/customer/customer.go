@@ -36,7 +36,6 @@ func (cr customerRepository) Find(cpf CPF) (*domain.Customer, error) {
 
 func (cr customerRepository) Save(customer *domain.Customer) error {
 	_, err := cr.databaseAdapter.Save(
-		string(customer.CPF),
 		customer.ToMongo(),
 	)
 
