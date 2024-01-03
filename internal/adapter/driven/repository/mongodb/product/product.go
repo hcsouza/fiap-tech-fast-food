@@ -40,7 +40,7 @@ func (pr productRepository) FindAllByCategory(category Category) ([]domain.Produ
 	foundProducts := []domain.Product{}
 
 	for _, product := range products {
-		foundProducts = append(foundProducts, *product.(*domain.Product))
+		foundProducts = append(foundProducts, product.(domain.Product))
 	}
 
 	return foundProducts, nil
@@ -64,7 +64,7 @@ func (pr productRepository) Find(id string) (*domain.Product, error) {
 
 func (pr productRepository) Save(product *domain.Product) error {
 	_, err := pr.databaseAdapter.Save(
-		product.ToMongo(),
+		product.ToSaveMongo(),
 	)
 
 	if err != nil {
@@ -77,7 +77,7 @@ func (pr productRepository) Save(product *domain.Product) error {
 func (pr productRepository) Update(product *domain.Product) error {
 	_, err := pr.databaseAdapter.Update(
 		product.ID,
-		product.ToMongo(),
+		product.ToUpdateMongo(),
 	)
 
 	if err != nil {
