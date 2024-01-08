@@ -1,5 +1,6 @@
 mongodb:
-  host: "172.25.0.2"
+  # use docker-nameservice or use the mongodb ip host
+  host: mongoservice
   port: "27017"
   database: "db"
 api:
