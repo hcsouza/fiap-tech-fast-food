@@ -28,13 +28,14 @@ func NewMongoAdapter[T any](client mongo.Client, databaseName, collectionName st
 
 func (ad *mongoAdapter[T]) FindAll(fieldName, fieldValue string) ([]interface{}, error) {
 	ctx := context.TODO()
+	param := bson.D{}
 	var results []T
 
-	cursor, err := ad.collection.Find(ctx, bson.D{})
-
 	if fieldName != "" && fieldValue != "" {
-		cursor, err = ad.collection.Find(ctx, bson.D{{Key: fieldName, Value: fieldValue}})
+		param = bson.D{{Key: fieldName, Value: fieldValue}}
 	}
+
+	cursor, err := ad.collection.Find(ctx, param)
 
 	if err != nil {
 		return nil, err
