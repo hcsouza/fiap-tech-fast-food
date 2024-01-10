@@ -15,3 +15,9 @@ serve-swagger:
 
 generate-mocks:
 	@mockery --all --keeptree --output tests/mocks
+
+init-config-local:
+	if [ ! -f "./internal/adapter/infra/config/configs.yaml" ]; then cp ./internal/adapter/infra/config/configs.yaml.sample ./internal/adapter/infra/config/configs.yaml; fi
+
+start-local: init-config-local
+	docker-compose -f docker/docker-compose.yaml up

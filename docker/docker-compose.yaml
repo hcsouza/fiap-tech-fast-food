@@ -10,6 +10,16 @@ services:
     networks:
       - mongo-compose-network
 
+  fiap-tech-fast-food:
+    image: cosmtrek/air
+    working_dir: /project
+    ports:
+      - 8080:8080
+    volumes:
+      - ./../:/project
+    networks:
+      - mongo-compose-network
+
 networks: 
     mongo-compose-network:
       driver: bridge
