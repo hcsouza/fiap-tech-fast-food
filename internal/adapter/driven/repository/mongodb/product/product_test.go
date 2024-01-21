@@ -96,7 +96,7 @@ func TestProductRepository(t *testing.T) {
 
 		productRepository := repository.NewProductRepository(databaseAdapter)
 
-		product, err := productRepository.Find(id)
+		product, err := productRepository.FindById(id)
 
 		assert.Nil(t, err)
 		assert.NotNil(t, product)
@@ -108,7 +108,7 @@ func TestProductRepository(t *testing.T) {
 
 		productRepository := repository.NewProductRepository(databaseAdapter)
 
-		product, err := productRepository.Find(id)
+		product, err := productRepository.FindById(id)
 
 		assert.Nil(t, err)
 		assert.Nil(t, product)
@@ -120,7 +120,7 @@ func TestProductRepository(t *testing.T) {
 
 		productRepository := repository.NewProductRepository(databaseAdapter)
 
-		product, err := productRepository.Find(id)
+		product, err := productRepository.FindById(id)
 
 		assert.NotNil(t, err)
 		assert.Nil(t, product)

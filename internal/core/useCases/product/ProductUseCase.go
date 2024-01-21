@@ -16,6 +16,16 @@ func NewProductUseCase(repo repository.ProductRepository) IProductUseCase {
 	}
 }
 
+func (interactor *productUseCase) FindById(id string) (*domain.Product, error) {
+	product, err := interactor.repository.FindById(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return product, nil
+}
+
 func (interactor *productUseCase) GetAll() ([]domain.Product, error) {
 	products, err := interactor.repository.FindAll()
 

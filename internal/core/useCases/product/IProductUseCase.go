@@ -11,4 +11,5 @@ type IProductUseCase interface {
 	Create(product *domain.Product) error
 	Update(productId string, product *domain.Product) error
 	Delete(productId string) error
+	FindById(id string) (*domain.Product, error)
 }

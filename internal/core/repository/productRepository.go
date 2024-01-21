@@ -7,7 +7,7 @@ import (
 
 type ProductRepository interface {
 	FindAll() ([]domain.Product, error)
-	Find(id string) (*domain.Product, error)
+	FindById(id string) (*domain.Product, error)
 	FindAllByCategory(category Category) ([]domain.Product, error)
 	Save(product *domain.Product) error
 	Update(product *domain.Product) error
