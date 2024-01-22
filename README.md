@@ -1,6 +1,5 @@
 # fiap-tech-fast-food
 
-...Description
 
 ### Tech
 
@@ -66,4 +65,10 @@ Locally you can use the command below:
 
 ```sh
 go test ./...  -v
+```
+
+or use a make action: 
+
+```sh
+make test   
 ```
