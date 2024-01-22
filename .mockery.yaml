@@ -2,7 +2,7 @@ quiet: False
 disable-version-string: True
 with-expecter: True
 mockname: "{{.InterfaceName}}"
-filename: "{{.InterfaceName | lower}}.go"
+filename: "{{.InterfaceName | lower}}_mock.go"
 outpkg: mocks
 packages:
   github.com/hcsouza/fiap-tech-fast-food/internal/core/repository:
