@@ -46,7 +46,7 @@ func (pr productRepository) FindAllByCategory(category Category) ([]domain.Produ
 	return foundProducts, nil
 }
 
-func (pr productRepository) Find(id string) (*domain.Product, error) {
+func (pr productRepository) FindById(id string) (*domain.Product, error) {
 	product, err := pr.databaseAdapter.FindOne("_id", string(id))
 
 	if err != nil {

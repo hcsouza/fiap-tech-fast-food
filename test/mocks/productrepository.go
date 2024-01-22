@@ -68,64 +68,6 @@ func (_c *MockProductRepository_Delete_Call) RunAndReturn(run func(string) error
 	return _c
 }
 
-// Find provides a mock function with given fields: id
-func (_m *MockProductRepository) Find(id string) (*domain.Product, error) {
-	ret := _m.Called(id)
-
-	if len(ret) == 0 {
-		panic("no return value specified for Find")
-	}
-
-	var r0 *domain.Product
-	var r1 error
-	if rf, ok := ret.Get(0).(func(string) (*domain.Product, error)); ok {
-		return rf(id)
-	}
-	if rf, ok := ret.Get(0).(func(string) *domain.Product); ok {
-		r0 = rf(id)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*domain.Product)
-		}
-	}
-
-	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(id)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// MockProductRepository_Find_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Find'
-type MockProductRepository_Find_Call struct {
-	*mock.Call
-}
-
-// Find is a helper method to define mock.On call
-//   - id string
-func (_e *MockProductRepository_Expecter) Find(id interface{}) *MockProductRepository_Find_Call {
-	return &MockProductRepository_Find_Call{Call: _e.mock.On("Find", id)}
-}
-
-func (_c *MockProductRepository_Find_Call) Run(run func(id string)) *MockProductRepository_Find_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(string))
-	})
-	return _c
-}
-
-func (_c *MockProductRepository_Find_Call) Return(_a0 *domain.Product, _a1 error) *MockProductRepository_Find_Call {
-	_c.Call.Return(_a0, _a1)
-	return _c
-}
-
-func (_c *MockProductRepository_Find_Call) RunAndReturn(run func(string) (*domain.Product, error)) *MockProductRepository_Find_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // FindAll provides a mock function with given fields:
 func (_m *MockProductRepository) FindAll() ([]domain.Product, error) {
 	ret := _m.Called()
@@ -237,6 +179,64 @@ func (_c *MockProductRepository_FindAllByCategory_Call) Return(_a0 []domain.Prod
 }
 
 func (_c *MockProductRepository_FindAllByCategory_Call) RunAndReturn(run func(category.Category) ([]domain.Product, error)) *MockProductRepository_FindAllByCategory_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// FindById provides a mock function with given fields: id
+func (_m *MockProductRepository) FindById(id string) (*domain.Product, error) {
+	ret := _m.Called(id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindById")
+	}
+
+	var r0 *domain.Product
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (*domain.Product, error)); ok {
+		return rf(id)
+	}
+	if rf, ok := ret.Get(0).(func(string) *domain.Product); ok {
+		r0 = rf(id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*domain.Product)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockProductRepository_FindById_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'FindById'
+type MockProductRepository_FindById_Call struct {
+	*mock.Call
+}
+
+// FindById is a helper method to define mock.On call
+//   - id string
+func (_e *MockProductRepository_Expecter) FindById(id interface{}) *MockProductRepository_FindById_Call {
+	return &MockProductRepository_FindById_Call{Call: _e.mock.On("FindById", id)}
+}
+
+func (_c *MockProductRepository_FindById_Call) Run(run func(id string)) *MockProductRepository_FindById_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string))
+	})
+	return _c
+}
+
+func (_c *MockProductRepository_FindById_Call) Return(_a0 *domain.Product, _a1 error) *MockProductRepository_FindById_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockProductRepository_FindById_Call) RunAndReturn(run func(string) (*domain.Product, error)) *MockProductRepository_FindById_Call {
 	_c.Call.Return(run)
 	return _c
 }
