@@ -127,11 +127,11 @@ func processProductsAndAmountFromOrderItemDTO(orderItemsDto []OrderItemDTO, o *o
 			return 0, nil, err
 		}
 
-		amount += prod.Price * float64(item.Amount)
+		amount += prod.Price * float64(item.Quantity)
 
 		itemInOrder := domain.OrderItem{
-			Product: *prod,
-			Amount:  item.Amount,
+			Product:  *prod,
+			Quantity: item.Quantity,
 		}
 
 		orderItems = append(orderItems, itemInOrder)

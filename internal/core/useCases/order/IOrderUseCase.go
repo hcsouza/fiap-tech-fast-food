@@ -18,7 +18,7 @@ type OrderUpdateDTO struct {
 
 type OrderItemDTO struct {
 	ProductId string `json:"product"`
-	Amount    int    `json:"amount"`
+	Quantity  int    `json:"amount"`
 }
 
 type IOrderUseCase interface {

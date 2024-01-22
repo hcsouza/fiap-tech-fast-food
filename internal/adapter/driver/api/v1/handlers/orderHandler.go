@@ -20,13 +20,13 @@ func NewOrderHandler(gRouter *gin.RouterGroup, interactor order.IOrderUseCase) {
 		interactor: interactor,
 	}
 
-	gRouter.GET("/order/:id", handler.FindById)
-	gRouter.GET("/order/status/:status", handler.GetAllByStatus)
+	gRouter.GET("/order/:id", handler.FindByIdHandler)
+	gRouter.GET("/order/status/:status", handler.GetAllByStatusHandler)
 	gRouter.POST("/order", handler.CreateOrderHandler)
 	gRouter.PUT("/order/:id", handler.UpdateOrderHandler)
 }
 
-func (handler *orderHandler) FindById(c *gin.Context) {
+func (handler *orderHandler) FindByIdHandler(c *gin.Context) {
 	orderId, exists := c.Params.Get("id")
 
 	if !exists {
@@ -43,7 +43,7 @@ func (handler *orderHandler) FindById(c *gin.Context) {
 	c.JSON(http.StatusOK, order)
 }
 
-func (handler *orderHandler) GetAllByStatus(c *gin.Context) {
+func (handler *orderHandler) GetAllByStatusHandler(c *gin.Context) {
 	status, exists := c.Params.Get("status")
 
 	if !exists {

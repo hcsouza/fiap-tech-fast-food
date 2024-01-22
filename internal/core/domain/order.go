@@ -9,7 +9,7 @@ import (
 
 type Order struct {
 	ID          string         `json:"_id" bson:"_id"`
-	Customer    Customer       `json:"customer"`
+	Customer    Customer       `json:"customer,omitempty"`
 	OrderStatus os.OrderStatus `json:"orderStatus"`
 	OrderItems  []OrderItem    `json:"orderItems"`
 	CreatedAt   ct.CustomTime  `json:"createdAt" bson:"createdAt"`
@@ -18,8 +18,8 @@ type Order struct {
 }
 
 type OrderItem struct {
-	Product Product `json:"product"`
-	Amount  int     `json:"amount"`
+	Product  Product `json:"product"`
+	Quantity int     `json:"amount"`
 }
 
 func (o *Order) ToSaveMongo() map[string]interface{} {
