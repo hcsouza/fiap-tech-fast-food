@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin/binding"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/customer"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/cpf"
 )
@@ -33,13 +34,21 @@ func NewCustomerHandler(gRouter *gin.RouterGroup, interactor customer.ICustomerU
 		interactor: interactor,
 	}
 
-	gRouter.GET("/customers", handler.GetCustomersHandler)
-	gRouter.POST("/customers", handler.CreateCustomerHandler)
+	gRouter.GET("/customer", handler.GetCustomerHandler)
+	gRouter.POST("/customer", handler.CreateCustomerHandler)
 
 }
 
+// Create Customer godoc
+// @Summary Create a new customer
+// @Description Create a new customer
+// @Tags Customer Routes
+// @Param        data    body     customer.CustomerCreateDTO  true  "Customer information"
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} domain.Customer{}
+// @Router /api/v1/customer [post]
 func (handler *customerHandler) CreateCustomerHandler(ctx *gin.Context) {
-
 	var createRequest customer.CustomerCreateDTO
 	err := ctx.ShouldBindJSON(&createRequest)
 
@@ -61,17 +70,19 @@ func (handler *customerHandler) CreateCustomerHandler(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, customer)
 }
 
-// Get All Customers godoc
-// @Summary Get all customers
-// @Description Get all customers
+// Get Customer godoc
+// @Summary Get customer by CPF
+// @Description Get customer by CPF
 // @Tags Customer Routes
+// @Param        cpf    query     string  true  "19119119100"
 // @Accept  json
 // @Produce  json
 // @Success 200 {array} domain.Customer{}
-// @Router /api/v1/customers [get]
-func (handler *customerHandler) GetCustomersHandler(ctx *gin.Context) {
+// @Router /api/v1/customer [get]
+func (handler *customerHandler) GetCustomerHandler(ctx *gin.Context) {
 	cpf := ctx.Query("cpf")
 	params := map[string]string{"cpf": cpf}
+	var customer *domain.Customer // Only to swaggo doc
 
 	actions, err := handler.interactor.GetCustomer(ctx.Request.Context(), params)
 	if err != nil {
@@ -79,7 +90,9 @@ func (handler *customerHandler) GetCustomersHandler(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, actions)
+	customer = actions
+
+	ctx.JSON(http.StatusOK, customer)
 }
 
 func CpfValidator(fl validator.FieldLevel) bool {

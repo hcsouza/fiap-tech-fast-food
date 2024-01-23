@@ -14,6 +14,12 @@ type Product struct {
 	Category Category `json:"category"`
 }
 
+type ProductDTO struct {
+	Name     string   `json:"name"`
+	Price    float64  `json:"price"`
+	Category Category `json:"category"`
+}
+
 func (p *Product) IsValidCategory() bool {
 	return p.Category.IsValid()
 }

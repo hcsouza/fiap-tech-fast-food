@@ -3,12 +3,14 @@ package handlers
 import (
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
-	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/order"
-	"github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
+	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/order"
+	"github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
 )
 
 type orderHandler struct {
@@ -26,23 +28,44 @@ func NewOrderHandler(gRouter *gin.RouterGroup, interactor order.IOrderUseCase) {
 	gRouter.PUT("/order/:id", handler.UpdateOrderHandler)
 }
 
+// Get Order godoc
+// @Summary Get order by ID
+// @Description Get order by ID
+// @Tags Order Routes
+// @Param        id   path      string  true  "Order ID"
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} domain.Order{}
+// @Router /api/v1/order/{id} [get]
 func (handler *orderHandler) FindByIdHandler(c *gin.Context) {
 	orderId, exists := c.Params.Get("id")
+	var order *domain.Order // Only to swaggo doc
 
 	if !exists {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "order id is required"})
 		return
 	}
 
-	order, err := handler.interactor.FindById(orderId)
+	result, err := handler.interactor.FindById(orderId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
+	order = result
+
 	c.JSON(http.StatusOK, order)
 }
 
+// Get All Orders by Status godoc
+// @Summary Get all orders by status
+// @Description Get all orders by status
+// @Tags Order Routes
+// @Param        status   path      string  true  "STARTED, WAITING_PAYMENT, RECEIVED, PREPARING, READY or COMPLETED"
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} domain.Order{}
+// @Router /api/v1/order/status/{status} [get]
 func (handler *orderHandler) GetAllByStatusHandler(c *gin.Context) {
 	status, exists := c.Params.Get("status")
 
@@ -67,6 +90,15 @@ func (handler *orderHandler) GetAllByStatusHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, orders)
 }
 
+// Create Order godoc
+// @Summary Create new order
+// @Description Create new order
+// @Tags Order Routes
+// @Param        data   body      order.OrderCreateDTO  true  "Order information and customer CPF"
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} interface{}
+// @Router /api/v1/order [post]
 func (handler *orderHandler) CreateOrderHandler(c *gin.Context) {
 	var order order.OrderCreateDTO
 
@@ -95,6 +127,15 @@ func (handler *orderHandler) CreateOrderHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"OrderId": orderId})
 }
 
+// Update Order godoc
+// @Summary Update order
+// @Description Update order
+// @Tags Order Routes
+// @Param        data   body      order.OrderUpdateDTO  true  "Order information and customer CPF"
+// @Accept  json
+// @Produce  json
+// @Success 200
+// @Router /api/v1/order/{id} [put]
 func (handler *orderHandler) UpdateOrderHandler(c *gin.Context) {
 	orderId, exists := c.Params.Get("id")
 
