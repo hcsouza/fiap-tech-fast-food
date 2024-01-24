@@ -452,11 +452,11 @@ const docTemplate = `{
         "github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.OrderItem": {
             "type": "object",
             "properties": {
-                "amount": {
-                    "type": "integer"
-                },
                 "product": {
                     "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Product"
+                },
+                "quantity": {
+                    "type": "integer"
                 }
             }
         },
@@ -526,11 +526,11 @@ const docTemplate = `{
         "github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderItemDTO": {
             "type": "object",
             "properties": {
-                "amount": {
-                    "type": "integer"
-                },
                 "product": {
                     "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
                 }
             }
         },

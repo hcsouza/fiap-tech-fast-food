@@ -19,7 +19,6 @@ generate-mocks:
 init-config-local:
 	if [ ! -f "./internal/adapter/infra/config/configs.yaml" ]; then cp ./internal/adapter/infra/config/configs.yaml.sample ./internal/adapter/infra/config/configs.yaml; fi
 
-
 start-local-development: init-config-local
 	docker-compose -f docker/local/docker-compose.yaml up
 
