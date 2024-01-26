@@ -24,6 +24,9 @@ func NewOrderHandler(gRouter *gin.RouterGroup, interactor order.IOrderUseCase) {
 	gRouter.GET("/order/status/:status", handler.GetAllByStatusHandler)
 	gRouter.POST("/order", handler.CreateOrderHandler)
 	gRouter.PUT("/order/:id", handler.UpdateOrderHandler)
+	gRouter.PUT("/order/checkout/:id", handler.CheckoutOrderHandler)
+	gRouter.PUT("/order/confirm-payment/:id", handler.ConfirmPaymentOrderHandler)
+	gRouter.PUT("/order/:id/status/:status", handler.UpdateStatusOrderHandler)
 }
 
 func (handler *orderHandler) FindByIdHandler(c *gin.Context) {
@@ -133,4 +136,71 @@ func (handler *orderHandler) UpdateOrderHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{})
+}
+
+func (handler *orderHandler) CheckoutOrderHandler(c *gin.Context) {
+	orderId, exists := c.Params.Get("id")
+
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "order id is required"})
+		return
+	}
+
+	qrCode, err := handler.interactor.Checkout(orderId)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, qrCode)
+	return
+}
+
+func (handler orderHandler) ConfirmPaymentOrderHandler(c *gin.Context) {
+	orderId, exists := c.Params.Get("id")
+
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "order id is required"})
+		return
+	}
+
+	err := handler.interactor.ConfirmPayment(orderId)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusNoContent, gin.H{})
+}
+
+func (handler orderHandler) UpdateStatusOrderHandler(c *gin.Context) {
+	orderId, exists := c.Params.Get("id")
+
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "order id is required"})
+		return
+	}
+
+	status, exists := c.Params.Get("status")
+
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "order id is required"})
+		return
+	}
+
+	sts, err := orderStatus.ParseOrderStatus(status)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid status"})
+		return
+	}
+
+	err = handler.interactor.UpdateOrderStatus(orderId, sts)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusNoContent, gin.H{})
 }

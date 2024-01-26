@@ -2,23 +2,27 @@ package order
 
 import (
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
+	paymentGateway "github.com/hcsouza/fiap-tech-fast-food/internal/core/gateway"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/repository"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/customer"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/product"
 	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
+	qrCodeResp "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/qrCodeResponse"
 )
 
 type orderUseCase struct {
 	repository      repository.OrderRepository
 	productUseCase  product.IProductUseCase
 	customerUseCase customer.ICustomerUseCase
+	paymentGateway  paymentGateway.PaymentGateway
 }
 
-func NewOrderUseCase(repo repository.OrderRepository, productUseCase product.IProductUseCase, customerUseCase customer.ICustomerUseCase) IOrderUseCase {
+func NewOrderUseCase(repo repository.OrderRepository, productUseCase product.IProductUseCase, customerUseCase customer.ICustomerUseCase, paymentGateway paymentGateway.PaymentGateway) IOrderUseCase {
 	return &orderUseCase{
 		repository:      repo,
 		productUseCase:  productUseCase,
 		customerUseCase: customerUseCase,
+		paymentGateway:  paymentGateway,
 	}
 }
 
@@ -137,4 +141,46 @@ func processProductsAndAmountFromOrderItemDTO(orderItemsDto []OrderItemDTO, o *o
 		orderItems = append(orderItems, itemInOrder)
 	}
 	return amount, orderItems, nil
+}
+
+func (o *orderUseCase) Checkout(orderId string) (qrCodeResp.QRCodeResponse, error) {
+	order, err := o.FindById(orderId)
+	if err != nil {
+		return qrCodeResp.QRCodeResponse{}, err
+	}
+
+	qrcode, err := o.paymentGateway.GetQRCodeFromOrder(orderId, order.Value)
+	if err != nil {
+		return qrCodeResp.QRCodeResponse{}, err
+	}
+
+	err = o.updateOrderStatus(*order, ORDER_WAITING_PAYMENT)
+	if err != nil {
+		return qrCodeResp.QRCodeResponse{}, err
+	}
+
+	return qrcode, nil
+}
+
+func (o *orderUseCase) ConfirmPayment(orderId string) error {
+	return o.UpdateOrderStatus(orderId, ORDER_PAYMENT_RECEIVED)
+}
+
+func (o *orderUseCase) UpdateOrderStatus(orderId string, status OrderStatus) error {
+	order, err := o.FindById(orderId)
+	if err != nil {
+		return err
+	}
+
+	err = o.updateOrderStatus(*order, status)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (o *orderUseCase) updateOrderStatus(order domain.Order, newStatus OrderStatus) error {
+	order.OrderStatus = newStatus
+	return o.repository.Update(&order)
 }
