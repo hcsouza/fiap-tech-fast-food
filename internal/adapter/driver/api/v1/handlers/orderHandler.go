@@ -11,6 +11,7 @@ import (
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/order"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
+	"github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/qrCodeResponse"
 )
 
 type orderHandler struct {
@@ -26,8 +27,8 @@ func NewOrderHandler(gRouter *gin.RouterGroup, interactor order.IOrderUseCase) {
 	gRouter.GET("/order/status/:status", handler.GetAllByStatusHandler)
 	gRouter.POST("/order", handler.CreateOrderHandler)
 	gRouter.PUT("/order/:id", handler.UpdateOrderHandler)
-	gRouter.PUT("/order/checkout/:id", handler.CheckoutOrderHandler)
-	gRouter.PUT("/order/confirm-payment/:id", handler.ConfirmPaymentOrderHandler)
+	gRouter.POST("/order/checkout/:id", handler.CheckoutOrderHandler)
+	gRouter.POST("/order/confirm-payment/:id", handler.ConfirmPaymentOrderHandler)
 	gRouter.PUT("/order/:id/status/:status", handler.UpdateStatusOrderHandler)
 }
 
@@ -179,7 +180,17 @@ func (handler *orderHandler) UpdateOrderHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
+// Generate QR Code to Order godoc
+// @Summary Generate QR code to order (fake checkout)
+// @Description Generate QR code to order (fake checkout)
+// @Tags Order Routes
+// @Param        id   path      string  true  "Order ID"
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} qrCodeResponse.QRCodeResponse
+// @Router /api/v1/order/checkout/{id} [post]
 func (handler *orderHandler) CheckoutOrderHandler(c *gin.Context) {
+	var qrCodeResponse qrCodeResponse.QRCodeResponse
 	orderId, exists := c.Params.Get("id")
 
 	if !exists {
@@ -187,17 +198,25 @@ func (handler *orderHandler) CheckoutOrderHandler(c *gin.Context) {
 		return
 	}
 
-	qrCode, err := handler.interactor.Checkout(orderId)
+	qrCodeResponse, err := handler.interactor.Checkout(orderId)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, qrCode)
-	return
+	c.JSON(http.StatusOK, qrCodeResponse)
 }
 
+// Confirm Payment Order godoc
+// @Summary Payment order confirmation (fake checkout)
+// @Description Payment order confirmation (fake checkout)
+// @Tags Order Routes
+// @Param        id   path      string  true  "Order ID"
+// @Accept  json
+// @Produce  json
+// @Success 204
+// @Router /api/v1/order/confirm-payment/{id} [post]
 func (handler orderHandler) ConfirmPaymentOrderHandler(c *gin.Context) {
 	orderId, exists := c.Params.Get("id")
 
@@ -216,6 +235,16 @@ func (handler orderHandler) ConfirmPaymentOrderHandler(c *gin.Context) {
 	c.JSON(http.StatusNoContent, gin.H{})
 }
 
+// Update Order Status godoc
+// @Summary Update order status
+// @Description Update order status
+// @Tags Order Routes
+// @Param        id   path      string  true  "Order ID"
+// @Param        status   path      string  true  "STARTED, WAITING_PAYMENT, RECEIVED, PREPARING, READY or COMPLETED"
+// @Accept  json
+// @Produce  json
+// @Success 204
+// @Router /api/v1/order/{id}/status/{status} [put]
 func (handler orderHandler) UpdateStatusOrderHandler(c *gin.Context) {
 	orderId, exists := c.Params.Get("id")
 
