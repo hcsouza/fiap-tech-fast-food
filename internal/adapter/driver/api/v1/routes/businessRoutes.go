@@ -2,12 +2,15 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	gw "github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driven/httpClient"
+	pg "github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driven/httpClient/paymentGateway"
 	adapterDB "github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driven/repository/mongodb"
 	customerDB "github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driven/repository/mongodb/customer"
 	orderDB "github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driven/repository/mongodb/order"
 	productDB "github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driven/repository/mongodb/product"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/adapter/infra/config"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/order"
+	"net/http"
 
 	"github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driver/api/v1/handlers"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
@@ -37,7 +40,7 @@ func registerCustomerHandler(groupServer *gin.RouterGroup, dbClient mongo.Client
 }
 
 func registerProductHandler(groupServer *gin.RouterGroup, dbClient mongo.Client) {
-	repo := productDB.NewProductRepository(
+	productRepo := productDB.NewProductRepository(
 		adapterDB.NewMongoAdapter[domain.Product](
 			dbClient,
 			config.GetMongoCfg().Database,
@@ -45,7 +48,7 @@ func registerProductHandler(groupServer *gin.RouterGroup, dbClient mongo.Client)
 		),
 	)
 
-	productInteractor := product.NewProductUseCase(repo)
+	productInteractor := product.NewProductUseCase(productRepo)
 	handlers.NewProductHandler(groupServer, productInteractor)
 }
 
@@ -74,8 +77,12 @@ func registerOrderHandler(groupServer *gin.RouterGroup, dbClient mongo.Client) {
 		),
 	)
 
+	client := http.Client{}
+	gateway := gw.NewGateway(client)
+	paymentGateway := pg.NewPaymentGateway(gateway)
+
 	customerInteractor := customer.NewCustomerUseCase(customerRepo)
 	productInteractor := product.NewProductUseCase(productRepo)
-	orderInteractor := order.NewOrderUseCase(orderRepo, productInteractor, customerInteractor)
+	orderInteractor := order.NewOrderUseCase(orderRepo, productInteractor, customerInteractor, paymentGateway)
 	handlers.NewOrderHandler(groupServer, orderInteractor)
 }
