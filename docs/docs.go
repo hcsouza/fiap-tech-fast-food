@@ -419,6 +419,15 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "Product information",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.ProductDTO"
+                        }
                     }
                 ],
                 "responses": {

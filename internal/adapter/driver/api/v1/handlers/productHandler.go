@@ -122,6 +122,7 @@ func (handler *productHandler) CreateProductHandler(c *gin.Context) {
 // @Description Update product
 // @Tags Product Routes
 // @Param        id   path      string  true  "Product ID"
+// @Param        data   body      domain.ProductDTO  true  "Product information"
 // @Accept  json
 // @Produce  json
 // @Success 200

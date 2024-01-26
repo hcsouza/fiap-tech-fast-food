@@ -410,6 +410,12 @@ paths:
         name: id
         required: true
         type: string
+      - description: Product information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.ProductDTO'
       produces:
       - application/json
       responses:
