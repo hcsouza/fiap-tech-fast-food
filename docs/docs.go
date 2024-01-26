@@ -116,6 +116,67 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/order/checkout/{id}": {
+            "post": {
+                "description": "Generate QR code to order (fake checkout)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order Routes"
+                ],
+                "summary": "Generate QR code to order (fake checkout)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_qrCodeResponse.QRCodeResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order/confirm-payment/{id}": {
+            "post": {
+                "description": "Payment order confirmation (fake checkout)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order Routes"
+                ],
+                "summary": "Payment order confirmation (fake checkout)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
         "/api/v1/order/status/{status}": {
             "get": {
                 "description": "Get all orders by status",
@@ -208,6 +269,42 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/v1/order/{id}/status/{status}": {
+            "put": {
+                "description": "Update order status",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order Routes"
+                ],
+                "summary": "Update order status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "STARTED, WAITING_PAYMENT, RECEIVED, PREPARING, READY or COMPLETED",
+                        "name": "status",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
                     }
                 }
             }
@@ -564,6 +661,7 @@ const docTemplate = `{
             "enum": [
                 "STARTED",
                 "WAITING_PAYMENT",
+                "PAYMENT_RECEIVED",
                 "RECEIVED",
                 "PREPARING",
                 "READY",
@@ -572,11 +670,20 @@ const docTemplate = `{
             "x-enum-varnames": [
                 "ORDER_STARTED",
                 "ORDER_WAITING_PAYMENT",
+                "ORDER_PAYMENT_RECEIVED",
                 "ORDER_RECEIVED",
                 "ORDER_BEING_PREPARED",
                 "ORDER_READY",
                 "ORDER_COMPLETED"
             ]
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_qrCodeResponse.QRCodeResponse": {
+            "type": "object",
+            "properties": {
+                "qrCode": {
+                    "type": "string"
+                }
+            }
         }
     }
 }`

@@ -103,6 +103,7 @@ definitions:
     enum:
     - STARTED
     - WAITING_PAYMENT
+    - PAYMENT_RECEIVED
     - RECEIVED
     - PREPARING
     - READY
@@ -111,10 +112,16 @@ definitions:
     x-enum-varnames:
     - ORDER_STARTED
     - ORDER_WAITING_PAYMENT
+    - ORDER_PAYMENT_RECEIVED
     - ORDER_RECEIVED
     - ORDER_BEING_PREPARED
     - ORDER_READY
     - ORDER_COMPLETED
+  github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_qrCodeResponse.QRCodeResponse:
+    properties:
+      qrCode:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -226,6 +233,70 @@ paths:
         "200":
           description: OK
       summary: Update order
+      tags:
+      - Order Routes
+  /api/v1/order/{id}/status/{status}:
+    put:
+      consumes:
+      - application/json
+      description: Update order status
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: STARTED, WAITING_PAYMENT, RECEIVED, PREPARING, READY or COMPLETED
+        in: path
+        name: status
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+      summary: Update order status
+      tags:
+      - Order Routes
+  /api/v1/order/checkout/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Generate QR code to order (fake checkout)
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_qrCodeResponse.QRCodeResponse'
+      summary: Generate QR code to order (fake checkout)
+      tags:
+      - Order Routes
+  /api/v1/order/confirm-payment/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Payment order confirmation (fake checkout)
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+      summary: Payment order confirmation (fake checkout)
       tags:
       - Order Routes
   /api/v1/order/status/{status}:
