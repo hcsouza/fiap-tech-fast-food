@@ -193,7 +193,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "STARTED, WAITING_PAYMENT, RECEIVED, PREPARING, READY or COMPLETED",
+                        "description": "STARTED, WAITING_PAYMENT, PAYMENT_RECEIVED, RECEIVED, PREPARING, READY or COMPLETED",
                         "name": "status",
                         "in": "path",
                         "required": true
@@ -296,7 +296,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "STARTED, WAITING_PAYMENT, RECEIVED, PREPARING, READY or COMPLETED",
+                        "description": "STARTED, WAITING_PAYMENT, PAYMENT_RECEIVED, RECEIVED, PREPARING, READY or COMPLETED",
                         "name": "status",
                         "in": "path",
                         "required": true
