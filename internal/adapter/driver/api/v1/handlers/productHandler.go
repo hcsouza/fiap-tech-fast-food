@@ -25,6 +25,14 @@ func NewProductHandler(gRouter *gin.RouterGroup, interactor product.IProductUseC
 	gRouter.DELETE("/product/:id", handler.DeleteProductHandler)
 }
 
+// Get All Products godoc
+// @Summary Get all products
+// @Description Get all products
+// @Tags Product Routes
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} domain.Product{}
+// @Router /api/v1/product [get]
 func (handler *productHandler) GetAllProductsHandler(c *gin.Context) {
 	actions, err := handler.interactor.GetAll()
 
@@ -36,6 +44,15 @@ func (handler *productHandler) GetAllProductsHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, actions)
 }
 
+// Get All Products by category godoc
+// @Summary Get all products by category
+// @Description Get all products by category
+// @Tags Product Routes
+// @Param        category   path      string  true  "acompanhamento, bebida, lanche or sobremesa"
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} domain.Product{}
+// @Router /api/v1/product/{category} [get]
 func (handler *productHandler) GetProductByCategoryHandler(c *gin.Context) {
 	category, exists := c.Params.Get("category")
 
@@ -59,6 +76,15 @@ func (handler *productHandler) GetProductByCategoryHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, products)
 }
 
+// Create Product godoc
+// @Summary Create new product
+// @Description Create new product
+// @Tags Product Routes
+// @Param        data   body      domain.ProductDTO  true  "Product information"
+// @Accept  json
+// @Produce  json
+// @Success 200
+// @Router /api/v1/product [post]
 func (handler *productHandler) CreateProductHandler(c *gin.Context) {
 	var product domain.Product
 	if err := c.ShouldBindJSON(&product); err != nil {
@@ -91,6 +117,16 @@ func (handler *productHandler) CreateProductHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
+// Update Product godoc
+// @Summary Update product
+// @Description Update product
+// @Tags Product Routes
+// @Param        id   path      string  true  "Product ID"
+// @Param        data   body      domain.ProductDTO  true  "Product information"
+// @Accept  json
+// @Produce  json
+// @Success 200
+// @Router /api/v1/product/{id} [put]
 func (handler *productHandler) UpdateProductHandler(c *gin.Context) {
 	productId, exists := c.Params.Get("id")
 
@@ -130,6 +166,15 @@ func (handler *productHandler) UpdateProductHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
+// Delete Product godoc
+// @Summary Delete product
+// @Description Delete product
+// @Tags Product Routes
+// @Param        id   path      string  true  "Product ID"
+// @Accept  json
+// @Produce  json
+// @Success 200
+// @Router /api/v1/product/{id} [delete]
 func (handler *productHandler) DeleteProductHandler(c *gin.Context) {
 	productId, exists := c.Params.Get("id")
 

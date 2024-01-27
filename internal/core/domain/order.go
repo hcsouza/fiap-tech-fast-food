@@ -1,10 +1,11 @@
 package domain
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	ct "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/customTime"
 	os "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
-	"time"
 )
 
 type Order struct {
@@ -19,7 +20,7 @@ type Order struct {
 
 type OrderItem struct {
 	Product  Product `json:"product"`
-	Quantity int     `json:"amount"`
+	Quantity int     `json:"quantity"`
 }
 
 func (o *Order) ToSaveMongo() map[string]interface{} {

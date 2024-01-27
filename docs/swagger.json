@@ -9,9 +9,9 @@
     "host": "localhost:8080",
     "basePath": "/",
     "paths": {
-        "/api/v1/customers": {
+        "/api/v1/customer": {
             "get": {
-                "description": "Get all customers",
+                "description": "Get customer by CPF",
                 "consumes": [
                     "application/json"
                 ],
@@ -21,7 +21,16 @@
                 "tags": [
                     "Customer Routes"
                 ],
-                "summary": "Get all customers",
+                "summary": "Get customer by CPF",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "19119119100",
+                        "name": "cpf",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -31,6 +40,420 @@
                                 "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer"
                             }
                         }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new customer",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customer Routes"
+                ],
+                "summary": "Create a new customer",
+                "parameters": [
+                    {
+                        "description": "Customer information",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_customer.CustomerCreateDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order": {
+            "post": {
+                "description": "Create new order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order Routes"
+                ],
+                "summary": "Create new order",
+                "parameters": [
+                    {
+                        "description": "Order information and customer CPF",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderCreateDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order/checkout/{id}": {
+            "post": {
+                "description": "Generate QR code to order (fake checkout)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order Routes"
+                ],
+                "summary": "Generate QR code to order (fake checkout)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_qrCodeResponse.QRCodeResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order/confirm-payment/{id}": {
+            "post": {
+                "description": "Payment order confirmation (fake checkout)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order Routes"
+                ],
+                "summary": "Payment order confirmation (fake checkout)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/api/v1/order/status/{status}": {
+            "get": {
+                "description": "Get all orders by status",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order Routes"
+                ],
+                "summary": "Get all orders by status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "STARTED, WAITING_PAYMENT, RECEIVED, PREPARING, READY or COMPLETED",
+                        "name": "status",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Order"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order/{id}": {
+            "get": {
+                "description": "Get order by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order Routes"
+                ],
+                "summary": "Get order by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Order"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order Routes"
+                ],
+                "summary": "Update order",
+                "parameters": [
+                    {
+                        "description": "Order information and customer CPF",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderUpdateDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/v1/order/{id}/status/{status}": {
+            "put": {
+                "description": "Update order status",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order Routes"
+                ],
+                "summary": "Update order status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "STARTED, WAITING_PAYMENT, RECEIVED, PREPARING, READY or COMPLETED",
+                        "name": "status",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/api/v1/product": {
+            "get": {
+                "description": "Get all products",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Routes"
+                ],
+                "summary": "Get all products",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Product"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create new product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Routes"
+                ],
+                "summary": "Create new product",
+                "parameters": [
+                    {
+                        "description": "Product information",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.ProductDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/v1/product/{category}": {
+            "get": {
+                "description": "Get all products by category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Routes"
+                ],
+                "summary": "Get all products by category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "acompanhamento, bebida, lanche or sobremesa",
+                        "name": "category",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Product"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/product/{id}": {
+            "put": {
+                "description": "Update product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Routes"
+                ],
+                "summary": "Update product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Product information",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.ProductDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Routes"
+                ],
+                "summary": "Delete product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     }
                 }
             }
@@ -93,6 +516,174 @@
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Order": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_customTime.CustomTime"
+                },
+                "customer": {
+                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer"
+                },
+                "orderItems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.OrderItem"
+                    }
+                },
+                "orderStatus": {
+                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_orderStatus.OrderStatus"
+                },
+                "updatedAt": {
+                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_customTime.CustomTime"
+                },
+                "value": {
+                    "type": "number"
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.OrderItem": {
+            "type": "object",
+            "properties": {
+                "product": {
+                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Product"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Product": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.ProductDTO": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_customer.CustomerCreateDTO": {
+            "type": "object",
+            "required": [
+                "cpf",
+                "email"
+            ],
+            "properties": {
+                "cpf": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderCreateDTO": {
+            "type": "object",
+            "properties": {
+                "customer": {
+                    "type": "string"
+                },
+                "orderItems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderItemDTO"
+                    }
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderItemDTO": {
+            "type": "object",
+            "properties": {
+                "product": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderUpdateDTO": {
+            "type": "object",
+            "properties": {
+                "customer": {
+                    "type": "string"
+                },
+                "orderItems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderItemDTO"
+                    }
+                },
+                "orderStatus": {
+                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_orderStatus.OrderStatus"
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_customTime.CustomTime": {
+            "type": "object",
+            "properties": {
+                "time.Time": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_orderStatus.OrderStatus": {
+            "type": "string",
+            "enum": [
+                "STARTED",
+                "WAITING_PAYMENT",
+                "PAYMENT_RECEIVED",
+                "RECEIVED",
+                "PREPARING",
+                "READY",
+                "COMPLETED"
+            ],
+            "x-enum-varnames": [
+                "ORDER_STARTED",
+                "ORDER_WAITING_PAYMENT",
+                "ORDER_PAYMENT_RECEIVED",
+                "ORDER_RECEIVED",
+                "ORDER_BEING_PREPARED",
+                "ORDER_READY",
+                "ORDER_COMPLETED"
+            ]
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_qrCodeResponse.QRCodeResponse": {
+            "type": "object",
+            "properties": {
+                "qrCode": {
                     "type": "string"
                 }
             }

@@ -12,3 +12,5 @@ packages:
     interfaces:
       CustomerRepository:
       IDatabaseAdapter:
+      ProductRepository:
+      OrderRepository:

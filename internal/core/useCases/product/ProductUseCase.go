@@ -1,6 +1,8 @@
 package product
 
 import (
+	"fmt"
+
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/repository"
 	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/category"
@@ -20,6 +22,15 @@ func (interactor *productUseCase) FindById(id string) (*domain.Product, error) {
 	product, err := interactor.repository.FindById(id)
 
 	if err != nil {
+		mappedErrors := map[string]error{
+			"record not found": fmt.Errorf("not found product id {%s}", id),
+		}
+		mappedError, ok := mappedErrors[err.Error()]
+
+		if ok {
+			return nil, mappedError
+		}
+
 		return nil, err
 	}
 
