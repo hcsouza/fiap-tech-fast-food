@@ -3,6 +3,7 @@ package mongodb
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	coreErrors "github.com/hcsouza/fiap-tech-fast-food/internal/core/errors"
@@ -81,12 +82,8 @@ func (ad *mongoAdapter[T]) Save(data interface{}) (interface{}, error) {
 
 	res, err := ad.collection.InsertOne(ctx, data)
 	if err != nil {
-		if writeException, ok := err.(mongo.WriteException); ok {
-			for _, writeError := range writeException.WriteErrors {
-				if writeError.Code == MongoDuplicateKeyErrorCode {
-					return nil, coreErrors.ErrDuplicatedKey
-				}
-			}
+		if strings.Contains(err.Error(), "duplicate key error") {
+			return nil, coreErrors.ErrDuplicatedKey
 		}
 		return nil, err
 	}
