@@ -11,6 +11,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
+	coreErrors "github.com/hcsouza/fiap-tech-fast-food/internal/core/errors"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/customer"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/cpf"
 )
@@ -63,8 +64,14 @@ func (handler *customerHandler) CreateCustomerHandler(ctx *gin.Context) {
 	}
 
 	customer, err := handler.interactor.CreateCustomer(ctx.Request.Context(), createRequest)
+
+	if errors.Is(err, coreErrors.ErrDuplicatedKey) {
+		ctx.JSON(http.StatusConflict, gin.H{"error": "customer already exists"})
+		return
+	}
+
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	ctx.JSON(http.StatusCreated, customer)

@@ -3,12 +3,16 @@ package mongodb
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
+	coreErrors "github.com/hcsouza/fiap-tech-fast-food/internal/core/errors"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/repository"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
+
+const MongoDuplicateKeyErrorCode = 11000
 
 type mongoAdapter[T any] struct {
 	client         mongo.Client
@@ -77,6 +81,13 @@ func (ad *mongoAdapter[T]) Save(data interface{}) (interface{}, error) {
 	defer cancel()
 
 	res, err := ad.collection.InsertOne(ctx, data)
+	if err != nil {
+		if strings.Contains(err.Error(), "duplicate key error") {
+			return nil, coreErrors.ErrDuplicatedKey
+		}
+		return nil, err
+	}
+
 	return res.InsertedID, err
 }
 
