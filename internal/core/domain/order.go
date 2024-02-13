@@ -15,7 +15,7 @@ type Order struct {
 	OrderItems  []OrderItem    `json:"orderItems"`
 	CreatedAt   ct.CustomTime  `json:"createdAt" bson:"createdAt"`
 	UpdatedAt   ct.CustomTime  `json:"updatedAt" bson:"updatedAt"`
-	Value       float64        `json:"value"`
+	Amount      float64        `json:"amount"`
 }
 
 type OrderItem struct {
@@ -29,7 +29,7 @@ func (o *Order) ToSaveMongo() map[string]interface{} {
 		"customer":    o.Customer,
 		"orderStatus": o.OrderStatus,
 		"orderItems":  o.OrderItems,
-		"value":       o.Value,
+		"amount":      o.Amount,
 		"createdAt":   ct.CustomTime{Time: time.Now()},
 	}
 }
@@ -38,7 +38,7 @@ func (o *Order) ToUpdateMongo() map[string]interface{} {
 	return map[string]interface{}{
 		"orderStatus": o.OrderStatus,
 		"orderItems":  o.OrderItems,
-		"value":       o.Value,
+		"amount":      o.Amount,
 		"updatedAt":   ct.CustomTime{Time: time.Now()},
 	}
 }

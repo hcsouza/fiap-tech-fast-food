@@ -63,7 +63,7 @@ func (o *orderUseCase) CreateOrder(order OrderCreateDTO) (string, error) {
 	orderToCreate := domain.Order{
 		OrderStatus: ORDER_STARTED,
 		OrderItems:  orderItems,
-		Value:       amount,
+		Amount:      amount,
 		Customer:    customer,
 	}
 
@@ -120,7 +120,7 @@ func (o *orderUseCase) UpdateOrder(orderId string, order OrderUpdateDTO) error {
 		ID:          orderId,
 		OrderStatus: existentOrder.OrderStatus,
 		OrderItems:  orderItems,
-		Value:       amount,
+		Amount:      amount,
 	}
 
 	err = o.repository.Update(&orderToUpdate)
