@@ -544,6 +544,9 @@ const docTemplate = `{
                 "_id": {
                     "type": "string"
                 },
+                "amount": {
+                    "type": "number"
+                },
                 "createdAt": {
                     "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_customTime.CustomTime"
                 },
@@ -561,9 +564,6 @@ const docTemplate = `{
                 },
                 "updatedAt": {
                     "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_customTime.CustomTime"
-                },
-                "value": {
-                    "type": "number"
                 }
             }
         },
