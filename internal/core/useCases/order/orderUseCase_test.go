@@ -2,8 +2,8 @@ package order_test
 
 import (
 	"errors"
-	gw "github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driven/httpClient"
-	pg "github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driven/httpClient/paymentGateway"
+	"testing"
+
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/customer"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/order"
@@ -11,8 +11,6 @@ import (
 	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
 	"github.com/hcsouza/fiap-tech-fast-food/test/mocks"
 	"github.com/stretchr/testify/assert"
-	"net/http"
-	"testing"
 )
 
 var orderRepositoryMock *mocks.MockOrderRepository
@@ -26,17 +24,13 @@ func TestOrderUseCase(t *testing.T) {
 	customerRepositoryMock := mocks.NewMockCustomerRepository(t)
 	customerUseCase := customer.NewCustomerUseCase(customerRepositoryMock)
 
-	client := http.Client{}
-	gateway := gw.NewGateway(client)
-	paymentGateway := pg.NewPaymentGateway(gateway)
-
 	t.Run("should return order by given id", func(t *testing.T) {
 		expectedOrder := &domain.Order{ID: "123"}
 
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
 		orderRepositoryMock.On("FindById", "123").Return(expectedOrder, nil)
 
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase, paymentGateway)
+		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
 
 		resultOrder, err := useCase.FindById("123")
 
@@ -48,7 +42,7 @@ func TestOrderUseCase(t *testing.T) {
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
 		orderRepositoryMock.On("FindById", "123").Return(nil, nil)
 
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase, paymentGateway)
+		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
 
 		resultOrder, err := useCase.FindById("123")
 
@@ -60,7 +54,7 @@ func TestOrderUseCase(t *testing.T) {
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
 		orderRepositoryMock.On("FindById", "789").Return(nil, errors.New("repository error"))
 
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase, paymentGateway)
+		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
 
 		result, err := useCase.FindById("789")
 
@@ -77,7 +71,7 @@ func TestOrderUseCase(t *testing.T) {
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
 		orderRepositoryMock.On("FindAllByStatus", ORDER_STARTED).Return(expectedOrders, nil)
 
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase, paymentGateway)
+		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
 
 		resultOrders, err := useCase.GetAllByStatus(ORDER_STARTED)
 
@@ -89,7 +83,7 @@ func TestOrderUseCase(t *testing.T) {
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
 		orderRepositoryMock.On("FindAllByStatus", ORDER_COMPLETED).Return([]domain.Order{}, nil)
 
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase, paymentGateway)
+		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
 
 		resultOrders, err := useCase.GetAllByStatus(ORDER_COMPLETED)
 
@@ -99,11 +93,11 @@ func TestOrderUseCase(t *testing.T) {
 
 	t.Run("should handle repository error", func(t *testing.T) {
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
-		orderRepositoryMock.On("FindAllByStatus", ORDER_WAITING_PAYMENT).Return(nil, errors.New("repository error"))
+		orderRepositoryMock.On("FindAllByStatus", ORDER_PAYMENT_PENDING).Return(nil, errors.New("repository error"))
 
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase, paymentGateway)
+		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
 
-		resultOrders, err := useCase.GetAllByStatus(ORDER_WAITING_PAYMENT)
+		resultOrders, err := useCase.GetAllByStatus(ORDER_PAYMENT_PENDING)
 
 		assert.Error(t, err)
 		assert.Nil(t, resultOrders)
