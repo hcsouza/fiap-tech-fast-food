@@ -15,6 +15,79 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/checkout/:id": {
+            "post": {
+                "description": "Create checkout from order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Checkout Routes"
+                ],
+                "summary": "Create checkout from order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_checkout.CreateCheckout"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/checkout/:id/callback": {
+            "post": {
+                "description": "Update checkout callback",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Checkout Routes"
+                ],
+                "summary": "Update checkout callback",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Order payment result status: approved, refused.",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_checkout.UpdateCheckoutDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/customer": {
             "get": {
                 "description": "Get customer by CPF",
@@ -116,67 +189,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/order/checkout/{id}": {
-            "post": {
-                "description": "Generate QR code to order (fake checkout)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Order Routes"
-                ],
-                "summary": "Generate QR code to order (fake checkout)",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_qrCodeResponse.QRCodeResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/order/confirm-payment/{id}": {
-            "post": {
-                "description": "Payment order confirmation (fake checkout)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Order Routes"
-                ],
-                "summary": "Payment order confirmation (fake checkout)",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content"
-                    }
-                }
-            }
-        },
         "/api/v1/order/status/{status}": {
             "get": {
                 "description": "Get all orders by status",
@@ -267,8 +279,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK"
+                    "204": {
+                        "description": "No Content"
                     }
                 }
             }
@@ -296,7 +308,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "STARTED, WAITING_PAYMENT, PAYMENT_RECEIVED, RECEIVED, PREPARING, READY or COMPLETED",
+                        "description": "STARTED, RECEIVED, PREPARING, READY or COMPLETED",
                         "name": "status",
                         "in": "path",
                         "required": true
@@ -597,6 +609,25 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_checkout.CreateCheckout": {
+            "type": "object",
+            "properties": {
+                "checkout_url": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_checkout.UpdateCheckoutDTO": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_customer.CustomerCreateDTO": {
             "type": "object",
             "required": [
@@ -651,9 +682,6 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderItemDTO"
                     }
-                },
-                "orderStatus": {
-                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_orderStatus.OrderStatus"
                 }
             }
         },
@@ -669,30 +697,22 @@ const docTemplate = `{
             "type": "string",
             "enum": [
                 "STARTED",
-                "WAITING_PAYMENT",
-                "PAYMENT_RECEIVED",
-                "RECEIVED",
+                "PAYMENT_PENDING",
+                "PAYMENT_APPROVED",
+                "PAYMENT_REFUSED",
                 "PREPARING",
                 "READY",
                 "COMPLETED"
             ],
             "x-enum-varnames": [
                 "ORDER_STARTED",
-                "ORDER_WAITING_PAYMENT",
-                "ORDER_PAYMENT_RECEIVED",
-                "ORDER_RECEIVED",
+                "ORDER_PAYMENT_PENDING",
+                "ORDER_PAYMENT_APPROVED",
+                "ORDER_PAYMENT_REFUSED",
                 "ORDER_BEING_PREPARED",
                 "ORDER_READY",
                 "ORDER_COMPLETED"
             ]
-        },
-        "github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_qrCodeResponse.QRCodeResponse": {
-            "type": "object",
-            "properties": {
-                "qrCode": {
-                    "type": "string"
-                }
-            }
         }
     }
 }`
