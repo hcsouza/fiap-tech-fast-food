@@ -101,6 +101,16 @@ func (o *orderUseCase) UpdateOrder(orderId string, order OrderUpdateDTO) error {
 	var err error
 	orderItemsDto := order.OrderItemsDTO
 
+	existentOrder, err := o.FindById(orderId)
+
+	if err != nil {
+		return err
+	}
+
+	if !existentOrder.OrderStatus.OrderCanBeUpdated() {
+		return fmt.Errorf("order cannot be updated cause status is %s", existentOrder.OrderStatus.String())
+	}
+
 	amount, orderItems, err = processProductsAndAmountFromOrderItemDTO(orderItemsDto, o, amount, orderItems)
 	if err != nil {
 		return err
@@ -108,7 +118,7 @@ func (o *orderUseCase) UpdateOrder(orderId string, order OrderUpdateDTO) error {
 
 	orderToUpdate := domain.Order{
 		ID:          orderId,
-		OrderStatus: order.OrderStatus,
+		OrderStatus: existentOrder.OrderStatus,
 		OrderItems:  orderItems,
 		Value:       amount,
 	}
@@ -144,11 +154,32 @@ func processProductsAndAmountFromOrderItemDTO(orderItemsDto []OrderItemDTO, o *o
 
 func (o *orderUseCase) UpdateOrderStatus(orderId string, status OrderStatus) error {
 	order, err := o.FindById(orderId)
+
 	if err != nil {
 		return err
 	}
 
+	if slices.Contains(order.OrderStatus.GetPreviousStatus(), status) {
+		return fmt.Errorf(
+			"order status %s cannot updated to previous status %s",
+			order.OrderStatus.String(),
+			status.String(),
+		)
+	}
+
+	isValidNextStatus := order.OrderStatus.IsValidNextStatus(status.String())
+
+	if !isValidNextStatus {
+		return fmt.Errorf(
+			"order status %s cannot be updated to %s. Status available are: %v",
+			order.OrderStatus.String(),
+			status.String(),
+			order.OrderStatus.AvailableNextStatus(order.OrderStatus),
+		)
+	}
+
 	err = o.updateOrderStatus(*order, status)
+
 	if err != nil {
 		return err
 	}
