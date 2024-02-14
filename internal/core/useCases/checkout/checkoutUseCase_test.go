@@ -22,13 +22,14 @@ func TestCheckoutUseCase(t *testing.T) {
 
 	customerRepositoryMock := mocks.NewMockCustomerRepository(t)
 	customerUseCase := customer.NewCustomerUseCase(customerRepositoryMock)
-	orderRepositoryMock := mocks.NewMockOrderRepository(t)
-	orderUseCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
 
 	t.Run("should create checkout with success", func(t *testing.T) {
 		orderId := "order-123"
 		existentOrder := &domain.Order{ID: orderId, OrderStatus: orderStatus.ORDER_STARTED}
 		updatedOrder := &domain.Order{ID: orderId, OrderStatus: orderStatus.ORDER_PAYMENT_PENDING}
+
+		orderRepositoryMock := mocks.NewMockOrderRepository(t)
+		orderUseCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
 
 		orderRepositoryMock.On("FindById", orderId).Return(existentOrder, nil)
 		orderRepositoryMock.On("Update", updatedOrder).Return(nil)
@@ -46,6 +47,9 @@ func TestCheckoutUseCase(t *testing.T) {
 		orderId := "order-123"
 		existentOrder := &domain.Order{ID: orderId, OrderStatus: orderStatus.ORDER_PAYMENT_PENDING}
 
+		orderRepositoryMock := mocks.NewMockOrderRepository(t)
+		orderUseCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
+
 		orderRepositoryMock.On("FindById", orderId).Return(existentOrder, nil)
 
 		useCase := checkout.NewCheckoutUseCase(orderUseCase)
@@ -62,6 +66,9 @@ func TestCheckoutUseCase(t *testing.T) {
 		existentOrder := &domain.Order{ID: orderId, OrderStatus: orderStatus.ORDER_STARTED}
 		updatedOrder := &domain.Order{ID: orderId, OrderStatus: orderStatus.ORDER_PAYMENT_PENDING}
 
+		orderRepositoryMock := mocks.NewMockOrderRepository(t)
+		orderUseCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
+
 		orderRepositoryMock.On("FindById", orderId).Return(existentOrder, nil)
 		orderRepositoryMock.On("Update", updatedOrder).Return(errors.New("error updating order status"))
 
@@ -76,6 +83,9 @@ func TestCheckoutUseCase(t *testing.T) {
 		orderId := "order-123"
 		existentOrder := &domain.Order{ID: orderId, OrderStatus: orderStatus.ORDER_PAYMENT_PENDING}
 		updatedOrder := &domain.Order{ID: orderId, OrderStatus: orderStatus.ORDER_PAYMENT_APPROVED}
+
+		orderRepositoryMock := mocks.NewMockOrderRepository(t)
+		orderUseCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
 
 		orderRepositoryMock.On("FindById", orderId).Return(existentOrder, nil)
 		orderRepositoryMock.On("Update", updatedOrder).Return(nil)
@@ -92,6 +102,9 @@ func TestCheckoutUseCase(t *testing.T) {
 		existentOrder := &domain.Order{ID: orderId, OrderStatus: orderStatus.ORDER_PAYMENT_PENDING}
 		updatedOrder := &domain.Order{ID: orderId, OrderStatus: orderStatus.ORDER_PAYMENT_REFUSED}
 
+		orderRepositoryMock := mocks.NewMockOrderRepository(t)
+		orderUseCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
+
 		orderRepositoryMock.On("FindById", orderId).Return(existentOrder, nil)
 		orderRepositoryMock.On("Update", updatedOrder).Return(nil)
 
@@ -105,6 +118,9 @@ func TestCheckoutUseCase(t *testing.T) {
 	t.Run("should not update order status When new status is equal to the current", func(t *testing.T) {
 		orderId := "order-123"
 		existentOrder := &domain.Order{ID: orderId, OrderStatus: orderStatus.ORDER_PAYMENT_APPROVED}
+
+		orderRepositoryMock := mocks.NewMockOrderRepository(t)
+		orderUseCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
 
 		orderRepositoryMock.On("FindById", orderId).Return(existentOrder, nil)
 
@@ -120,6 +136,9 @@ func TestCheckoutUseCase(t *testing.T) {
 		orderId := "order-123"
 		existentOrder := &domain.Order{ID: orderId, OrderStatus: orderStatus.ORDER_PAYMENT_APPROVED}
 
+		orderRepositoryMock := mocks.NewMockOrderRepository(t)
+		orderUseCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
+
 		orderRepositoryMock.On("FindById", orderId).Return(existentOrder, nil)
 
 		useCase := checkout.NewCheckoutUseCase(orderUseCase)
@@ -134,6 +153,9 @@ func TestCheckoutUseCase(t *testing.T) {
 		orderId := "order-123"
 		existentOrder := &domain.Order{ID: orderId, OrderStatus: orderStatus.ORDER_PAYMENT_PENDING}
 		updatedOrder := &domain.Order{ID: orderId, OrderStatus: orderStatus.ORDER_PAYMENT_APPROVED}
+
+		orderRepositoryMock := mocks.NewMockOrderRepository(t)
+		orderUseCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
 
 		orderRepositoryMock.On("FindById", orderId).Return(existentOrder, nil)
 		orderRepositoryMock.On("Update", updatedOrder).Return(errors.New("error updating order status"))
