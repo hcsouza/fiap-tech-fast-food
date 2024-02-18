@@ -1,6 +1,8 @@
 package order
 
 import (
+	"sort"
+
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	paymentGateway "github.com/hcsouza/fiap-tech-fast-food/internal/core/gateway"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/repository"
@@ -24,6 +26,32 @@ func NewOrderUseCase(repo repository.OrderRepository, productUseCase product.IPr
 		customerUseCase: customerUseCase,
 		paymentGateway:  paymentGateway,
 	}
+}
+
+func (o *orderUseCase) FindAll() ([]domain.Order, error) {
+	orders, err := o.repository.FindAll()
+
+	if err != nil {
+		return nil, err
+	}
+
+	sort.Slice(orders, func(secondIndex, firstIndex int) bool {
+		return sortByCreatedAt(orders[firstIndex], orders[secondIndex])
+	})
+
+	sort.Slice(orders, func(secondIndex, firstIndex int) bool {
+		return sortByStatus(orders[firstIndex], orders[secondIndex])
+	})
+
+	var filtredOrders []domain.Order
+
+	for _, order := range orders {
+		if order.OrderStatus != ORDER_COMPLETED {
+			filtredOrders = append(filtredOrders, order)
+		}
+	}
+
+	return filtredOrders, nil
 }
 
 func (o *orderUseCase) FindById(id string) (*domain.Order, error) {
@@ -183,4 +211,15 @@ func (o *orderUseCase) UpdateOrderStatus(orderId string, status OrderStatus) err
 func (o *orderUseCase) updateOrderStatus(order domain.Order, newStatus OrderStatus) error {
 	order.OrderStatus = newStatus
 	return o.repository.Update(&order)
+}
+
+func sortByStatus(firstOrder domain.Order, secondOrder domain.Order) bool {
+	return (secondOrder.OrderStatus == ORDER_READY ||
+		(secondOrder.OrderStatus == ORDER_BEING_PREPARED && firstOrder.OrderStatus != ORDER_READY)) &&
+		secondOrder.OrderStatus != firstOrder.OrderStatus
+}
+
+func sortByCreatedAt(firstOrder domain.Order, secondOrder domain.Order) bool {
+	return !secondOrder.CreatedAt.Equal(firstOrder.CreatedAt.Time) &&
+		secondOrder.CreatedAt.Before(firstOrder.CreatedAt.Time)
 }
