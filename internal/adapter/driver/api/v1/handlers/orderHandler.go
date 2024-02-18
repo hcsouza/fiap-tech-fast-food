@@ -39,7 +39,7 @@ func NewOrderHandler(gRouter *gin.RouterGroup, interactor order.IOrderUseCase) {
 // @Tags Order Routes
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} domain.Order{}
+// @Success 200 {array} domain.Order{}
 // @Router /api/v1/order [get]
 func (handler *orderHandler) FindAllHandler(c *gin.Context) {
 	orders, err := handler.interactor.FindAll()
