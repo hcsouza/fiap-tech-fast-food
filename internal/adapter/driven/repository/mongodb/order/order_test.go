@@ -17,6 +17,42 @@ func TestMain(m *testing.M) {
 	databaseAdapter = &mocks.MockIDatabaseAdapter{}
 }
 
+func TestOrderRepository_FindAll(t *testing.T) {
+	t.Run("Orders Found", func(t *testing.T) {
+		expectedOrders := []interface{}{&domain.Order{ID: "1"}, &domain.Order{ID: "2"}}
+		databaseAdapter.On("FindAll", "", "").Return(expectedOrders, nil)
+
+		orderRepository := repository.NewOrderRepository(databaseAdapter)
+		result, err := orderRepository.FindAll()
+
+		assert.NoError(t, err)
+		assert.Len(t, result, 2)
+		databaseAdapter.AssertExpectations(t)
+	})
+
+	t.Run("No Orders Found", func(t *testing.T) {
+		databaseAdapter.On("FindAll", "", "").Return([]interface{}{}, nil)
+
+		orderRepository := repository.NewOrderRepository(databaseAdapter)
+		result, err := orderRepository.FindAll()
+
+		assert.NoError(t, err)
+		assert.Empty(t, result)
+		databaseAdapter.AssertExpectations(t)
+	})
+
+	t.Run("Error in DatabaseAdapter", func(t *testing.T) {
+		databaseAdapter.On("FindAll", "", "").Return(nil, errors.New("database error"))
+
+		orderRepository := repository.NewOrderRepository(databaseAdapter)
+		result, err := orderRepository.FindAll()
+
+		assert.Error(t, err)
+		assert.Nil(t, result)
+		databaseAdapter.AssertExpectations(t)
+	})
+}
+
 func TestOrderRepository_FindById(t *testing.T) {
 	t.Run("Existing Order", func(t *testing.T) {
 		expectedOrder := &domain.Order{ID: "123"}
