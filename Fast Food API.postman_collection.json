@@ -10,29 +10,6 @@
 			"name": "Order",
 			"item": [
 				{
-					"name": "Checkout",
-					"item": [
-						{
-							"name": "Generate QR Code to Order",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"url": "http://localhost:8080/api/v1/order/checkout/608df6a3-a97e-4586-bf12-1afbec55c3ba"
-							},
-							"response": []
-						},
-						{
-							"name": "Confirm Payment",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"url": "http://localhost:8080/api/v1/order/confirm-payment/608df6a3-a97e-4586-bf12-1afbec55c3ba"
-							},
-							"response": []
-						}
-					]
-				},
-				{
 					"name": "Get All Orders by Status",
 					"event": [
 						{
@@ -69,7 +46,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:8080/api/v1/order/608df6a3-a97e-4586-bf12-1afbec55c3ba",
+						"url": "http://localhost:8080/api/v1/order/ef76245f-d697-4b41-bb95-3a7ada4b18ac",
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
 					},
 					"response": []
@@ -92,7 +69,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"customer\": \"19119119100\",\n    \"orderItems\": [\n        {\n            \"product\": \"5ea02829-6c67-401b-a5ee-a609c0222d1e\",\n            \"quantity\": 1\n        },\n        {\n            \"product\": \"f6ecc7fe-718b-46a9-961e-d509db8b3b58\",\n            \"quantity\": 1\n        },\n        {\n            \"product\": \"c21a289b-2cd7-4c40-af9a-935a3bae38d6\",\n            \"quantity\": 1\n        },\n        {\n            \"product\": \"965c5acb-c98e-41a7-9ad2-517c8bb21246\",\n            \"quantity\": 1\n        }\n    ]\n}",
+							"raw": "{\n    \"customer\": \"19119119100\",\n    \"orderItems\": [\n        {\n            \"product\": \"5ca80a7c-d49c-4843-8d28-44a7292db7c6\",\n            \"quantity\": 1\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -122,14 +99,14 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"orderStatus\": \"WAITING_PAYMENT\",\n    \"orderItems\": [\n        {\n            \"product\": \"5ea02829-6c67-401b-a5ee-a609c0222d1e\",\n            \"quantity\": 2\n        },\n        {\n            \"product\": \"f6ecc7fe-718b-46a9-961e-d509db8b3b58\",\n            \"quantity\": 1\n        },\n        {\n            \"product\": \"c21a289b-2cd7-4c40-af9a-935a3bae38d6\",\n            \"quantity\": 1\n        },\n        {\n            \"product\": \"965c5acb-c98e-41a7-9ad2-517c8bb21246\",\n            \"quantity\": 1\n        }\n    ]\n}",
+							"raw": "{\n    \"orderItems\": [\n        {\n            \"product\": \"1161308f-9cde-424a-a466-2ba43797ccc3\",\n            \"quantity\": 1\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "http://localhost:8080/api/v1/order/a271088e-e095-4191-af4d-27f35e415e13",
+						"url": "http://localhost:8080/api/v1/order/11d31b83-2ba7-4686-b208-da1b3ecfacac",
 						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
 					},
 					"response": []
@@ -139,7 +116,16 @@
 					"request": {
 						"method": "PUT",
 						"header": [],
-						"url": "http://localhost:8080/api/v1/order/4c2432fa-ab31-4313-8b45-00e950d70ddf/status/COMPLETED"
+						"url": "http://localhost:8080/api/v1/order/6aafc3f9-e00d-484b-9514-ac23c148e2b8/status/READY"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/v1/order"
 					},
 					"response": []
 				}
@@ -284,6 +270,29 @@
 						"method": "GET",
 						"header": [],
 						"url": "http://localhost:8080/health/liveness"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Checkout",
+			"item": [
+				{
+					"name": "Create Checkout from Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "http://localhost:8080/api/v1/checkout/11d31b83-2ba7-4686-b208-da1b3ecfacac"
+					},
+					"response": []
+				},
+				{
+					"name": "Checkout Callback",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "http://localhost:8080/api/v1/checkout/bb514475-2bfe-4024-8a51-b6a86903070e/callback"
 					},
 					"response": []
 				}
