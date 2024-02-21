@@ -1,11 +1,13 @@
 package handlers
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	coreErrors "github.com/hcsouza/fiap-tech-fast-food/internal/core/errors"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/checkout"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
 )
@@ -97,8 +99,8 @@ func (handler checkoutHandler) UpdateCheckoutCallback(c *gin.Context) {
 		return
 	}
 
-	if err != nil && err.Error() == "order already has a checkout completed" {
-		c.JSON(http.StatusConflict, gin.H{"error": "order already has a checkout completed"})
+	if err != nil && errors.Is(err, coreErrors.ErrCheckoutOrderAlreadyCompleted) {
+		c.JSON(http.StatusConflict, gin.H{"error": coreErrors.ErrCheckoutOrderAlreadyCompleted.Error()})
 		return
 	}
 

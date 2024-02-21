@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
+	coreErrors "github.com/hcsouza/fiap-tech-fast-food/internal/core/errors"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/checkout"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/customer"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/order"
@@ -57,7 +58,7 @@ func TestCheckoutUseCase(t *testing.T) {
 		createdCheckout, err := useCase.CreateCheckout(orderId)
 
 		assert.Nil(t, err)
-		assert.Equal(t, createdCheckout.Message, "Order already has a checkout completed")
+		assert.Equal(t, createdCheckout.Message, coreErrors.ErrCheckoutOrderAlreadyCompleted.Error())
 		assert.Equal(t, createdCheckout.CheckoutURL, "")
 	})
 
@@ -129,7 +130,7 @@ func TestCheckoutUseCase(t *testing.T) {
 		err := useCase.UpdateCheckout(orderId, orderStatus.ORDER_PAYMENT_APPROVED)
 
 		assert.NotNil(t, err)
-		assert.Equal(t, err.Error(), "order already has a checkout completed")
+		assert.Equal(t, err.Error(), coreErrors.ErrCheckoutOrderAlreadyCompleted.Error())
 	})
 
 	t.Run("should not update order status When new status is not valid next status", func(t *testing.T) {
@@ -146,7 +147,7 @@ func TestCheckoutUseCase(t *testing.T) {
 		err := useCase.UpdateCheckout(orderId, orderStatus.ORDER_COMPLETED)
 
 		assert.NotNil(t, err)
-		assert.Equal(t, err.Error(), "order already has a checkout completed")
+		assert.Equal(t, err.Error(), coreErrors.ErrCheckoutOrderAlreadyCompleted.Error())
 	})
 
 	t.Run("should not update order status When some error occurrs during update operation", func(t *testing.T) {

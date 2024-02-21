@@ -3,6 +3,7 @@ package checkout
 import (
 	"fmt"
 
+	coreErrors "github.com/hcsouza/fiap-tech-fast-food/internal/core/errors"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/order"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
 )
@@ -28,7 +29,7 @@ func (uc *checkoutUseCase) CreateCheckout(orderId string) (*CreateCheckout, erro
 	if !order.OrderStatus.IsValidNextStatus(nextStatus.String()) {
 		return &CreateCheckout{
 			CheckoutURL: "",
-			Message:     "Order already has a checkout completed",
+			Message:     coreErrors.ErrCheckoutOrderAlreadyCompleted.Error(),
 		}, nil
 	}
 
@@ -52,7 +53,7 @@ func (uc *checkoutUseCase) UpdateCheckout(orderId string, status orderStatus.Ord
 	}
 
 	if !order.OrderStatus.IsValidNextStatus(status.String()) {
-		return fmt.Errorf("order already has a checkout completed")
+		return coreErrors.ErrCheckoutOrderAlreadyCompleted
 	}
 
 	err = uc.order.UpdateOrderStatus(orderId, status)
