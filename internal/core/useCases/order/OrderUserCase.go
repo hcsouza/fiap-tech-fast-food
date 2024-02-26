@@ -1,28 +1,27 @@
 package order
 
 import (
+	"fmt"
+	"slices"
+
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
-	paymentGateway "github.com/hcsouza/fiap-tech-fast-food/internal/core/gateway"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/repository"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/customer"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/product"
 	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
-	qrCodeResp "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/qrCodeResponse"
 )
 
 type orderUseCase struct {
 	repository      repository.OrderRepository
 	productUseCase  product.IProductUseCase
 	customerUseCase customer.ICustomerUseCase
-	paymentGateway  paymentGateway.PaymentGateway
 }
 
-func NewOrderUseCase(repo repository.OrderRepository, productUseCase product.IProductUseCase, customerUseCase customer.ICustomerUseCase, paymentGateway paymentGateway.PaymentGateway) IOrderUseCase {
+func NewOrderUseCase(repo repository.OrderRepository, productUseCase product.IProductUseCase, customerUseCase customer.ICustomerUseCase) IOrderUseCase {
 	return &orderUseCase{
 		repository:      repo,
 		productUseCase:  productUseCase,
 		customerUseCase: customerUseCase,
-		paymentGateway:  paymentGateway,
 	}
 }
 
@@ -64,7 +63,7 @@ func (o *orderUseCase) CreateOrder(order OrderCreateDTO) (string, error) {
 	orderToCreate := domain.Order{
 		OrderStatus: ORDER_STARTED,
 		OrderItems:  orderItems,
-		Value:       amount,
+		Amount:      amount,
 		Customer:    customer,
 	}
 
@@ -102,6 +101,16 @@ func (o *orderUseCase) UpdateOrder(orderId string, order OrderUpdateDTO) error {
 	var err error
 	orderItemsDto := order.OrderItemsDTO
 
+	existentOrder, err := o.FindById(orderId)
+
+	if err != nil {
+		return err
+	}
+
+	if !existentOrder.OrderStatus.OrderCanBeUpdated() {
+		return fmt.Errorf("order cannot be updated cause status is %s", existentOrder.OrderStatus.String())
+	}
+
 	amount, orderItems, err = processProductsAndAmountFromOrderItemDTO(orderItemsDto, o, amount, orderItems)
 	if err != nil {
 		return err
@@ -109,9 +118,9 @@ func (o *orderUseCase) UpdateOrder(orderId string, order OrderUpdateDTO) error {
 
 	orderToUpdate := domain.Order{
 		ID:          orderId,
-		OrderStatus: order.OrderStatus,
+		OrderStatus: existentOrder.OrderStatus,
 		OrderItems:  orderItems,
-		Value:       amount,
+		Amount:      amount,
 	}
 
 	err = o.repository.Update(&orderToUpdate)
@@ -143,36 +152,34 @@ func processProductsAndAmountFromOrderItemDTO(orderItemsDto []OrderItemDTO, o *o
 	return amount, orderItems, nil
 }
 
-func (o *orderUseCase) Checkout(orderId string) (qrCodeResp.QRCodeResponse, error) {
-	order, err := o.FindById(orderId)
-	if err != nil {
-		return qrCodeResp.QRCodeResponse{}, err
-	}
-
-	qrcode, err := o.paymentGateway.GetQRCodeFromOrder(orderId, order.Value)
-	if err != nil {
-		return qrCodeResp.QRCodeResponse{}, err
-	}
-
-	err = o.updateOrderStatus(*order, ORDER_WAITING_PAYMENT)
-	if err != nil {
-		return qrCodeResp.QRCodeResponse{}, err
-	}
-
-	return qrcode, nil
-}
-
-func (o *orderUseCase) ConfirmPayment(orderId string) error {
-	return o.UpdateOrderStatus(orderId, ORDER_PAYMENT_RECEIVED)
-}
-
 func (o *orderUseCase) UpdateOrderStatus(orderId string, status OrderStatus) error {
 	order, err := o.FindById(orderId)
+
 	if err != nil {
 		return err
 	}
 
+	if slices.Contains(order.OrderStatus.GetPreviousStatus(), status) {
+		return fmt.Errorf(
+			"order status %s cannot updated to previous status %s",
+			order.OrderStatus.String(),
+			status.String(),
+		)
+	}
+
+	isValidNextStatus := order.OrderStatus.IsValidNextStatus(status.String())
+
+	if !isValidNextStatus {
+		return fmt.Errorf(
+			"order status %s cannot be updated to %s. Status available are: %v",
+			order.OrderStatus.String(),
+			status.String(),
+			order.OrderStatus.AvailableNextStatus(order.OrderStatus),
+		)
+	}
+
 	err = o.updateOrderStatus(*order, status)
+
 	if err != nil {
 		return err
 	}
