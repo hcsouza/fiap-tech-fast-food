@@ -3,7 +3,6 @@ package order
 import (
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	os "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
-	qr "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/qrCodeResponse"
 )
 
 type OrderCreateDTO struct {
@@ -14,7 +13,6 @@ type OrderCreateDTO struct {
 type OrderUpdateDTO struct {
 	Cpf           string         `json:"customer"`
 	OrderItemsDTO []OrderItemDTO `json:"orderItems"`
-	OrderStatus   os.OrderStatus `json:"orderStatus"`
 }
 
 type OrderItemDTO struct {
@@ -28,7 +26,5 @@ type IOrderUseCase interface {
 	GetAllByStatus(status os.OrderStatus) ([]domain.Order, error)
 	CreateOrder(order OrderCreateDTO) (string, error)
 	UpdateOrder(orderId string, order OrderUpdateDTO) error
-	Checkout(orderId string) (qr.QRCodeResponse, error)
-	ConfirmPayment(orderId string) error
 	UpdateOrderStatus(orderId string, status os.OrderStatus) error
 }

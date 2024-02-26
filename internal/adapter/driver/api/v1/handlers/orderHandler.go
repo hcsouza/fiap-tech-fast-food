@@ -11,7 +11,6 @@ import (
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/order"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
-	"github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/qrCodeResponse"
 )
 
 type orderHandler struct {
@@ -28,8 +27,6 @@ func NewOrderHandler(gRouter *gin.RouterGroup, interactor order.IOrderUseCase) {
 	gRouter.GET("/order/status/:status", handler.GetAllByStatusHandler)
 	gRouter.POST("/order", handler.CreateOrderHandler)
 	gRouter.PUT("/order/:id", handler.UpdateOrderHandler)
-	gRouter.POST("/order/checkout/:id", handler.CheckoutOrderHandler)
-	gRouter.POST("/order/confirm-payment/:id", handler.ConfirmPaymentOrderHandler)
 	gRouter.PUT("/order/:id/status/:status", handler.UpdateStatusOrderHandler)
 }
 
@@ -158,7 +155,7 @@ func (handler *orderHandler) CreateOrderHandler(c *gin.Context) {
 // @Param        data   body      order.OrderUpdateDTO  true  "Order information and customer CPF"
 // @Accept  json
 // @Produce  json
-// @Success 200
+// @Success 204
 // @Router /api/v1/order/{id} [put]
 func (handler *orderHandler) UpdateOrderHandler(c *gin.Context) {
 	orderId, exists := c.Params.Get("id")
@@ -179,73 +176,17 @@ func (handler *orderHandler) UpdateOrderHandler(c *gin.Context) {
 		}
 	}
 
-	_, err := orderStatus.ParseOrderStatus(order.OrderStatus.String())
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid status"})
-		return
-	}
-
 	if len(order.OrderItemsDTO) == 0 {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "at least one product must be selected"})
 		return
 	}
 
-	err = handler.interactor.UpdateOrder(orderId, order)
+	err := handler.interactor.UpdateOrder(orderId, order)
 
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	if err != nil && err.Error() == "record not found" {
+		c.JSON(http.StatusNotFound, gin.H{"error": "order not found"})
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{})
-}
-
-// Generate QR Code to Order godoc
-// @Summary Generate QR code to order (fake checkout)
-// @Description Generate QR code to order (fake checkout)
-// @Tags Order Routes
-// @Param        id   path      string  true  "Order ID"
-// @Accept  json
-// @Produce  json
-// @Success 200 {object} qrCodeResponse.QRCodeResponse
-// @Router /api/v1/order/checkout/{id} [post]
-func (handler *orderHandler) CheckoutOrderHandler(c *gin.Context) {
-	var qrCodeResponse qrCodeResponse.QRCodeResponse
-	orderId, exists := c.Params.Get("id")
-
-	if !exists {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "order id is required"})
-		return
-	}
-
-	qrCodeResponse, err := handler.interactor.Checkout(orderId)
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, qrCodeResponse)
-}
-
-// Confirm Payment Order godoc
-// @Summary Payment order confirmation (fake checkout)
-// @Description Payment order confirmation (fake checkout)
-// @Tags Order Routes
-// @Param        id   path      string  true  "Order ID"
-// @Accept  json
-// @Produce  json
-// @Success 204
-// @Router /api/v1/order/confirm-payment/{id} [post]
-func (handler orderHandler) ConfirmPaymentOrderHandler(c *gin.Context) {
-	orderId, exists := c.Params.Get("id")
-
-	if !exists {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "order id is required"})
-		return
-	}
-
-	err := handler.interactor.ConfirmPayment(orderId)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -260,7 +201,7 @@ func (handler orderHandler) ConfirmPaymentOrderHandler(c *gin.Context) {
 // @Description Update order status
 // @Tags Order Routes
 // @Param        id   path      string  true  "Order ID"
-// @Param        status   path      string  true  "STARTED, WAITING_PAYMENT, PAYMENT_RECEIVED, RECEIVED, PREPARING, READY or COMPLETED"
+// @Param        status   path      string  true  "STARTED, RECEIVED, PREPARING, READY or COMPLETED"
 // @Accept  json
 // @Produce  json
 // @Success 204
@@ -286,7 +227,28 @@ func (handler orderHandler) UpdateStatusOrderHandler(c *gin.Context) {
 		return
 	}
 
+	if sts.IsPaymentStatus() {
+		c.JSON(http.StatusForbidden, gin.H{"error": "it is not allowed to directly change the payment status"})
+		return
+	}
+
 	err = handler.interactor.UpdateOrderStatus(orderId, sts)
+
+	if err != nil && strings.Contains(err.Error(), "record not found") {
+		c.JSON(http.StatusNotFound, gin.H{"error": "order not found"})
+		return
+	}
+
+	if err != nil && strings.Contains(err.Error(), "cannot be updated to") {
+		c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err != nil && strings.Contains(err.Error(), "previous status") {
+		c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
+		return
+	}
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

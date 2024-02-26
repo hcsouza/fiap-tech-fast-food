@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driver/api/v1/middlewares"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driver/api/v1/routes"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/adapter/infra/config"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -11,6 +12,7 @@ import (
 
 func Run(gServer *gin.Engine, dbClient mongo.Client) {
 	gServer.Use(
+		middlewares.CORSMiddleware(),
 		gin.LoggerWithWriter(gin.DefaultWriter, "/health/liveness", "/health/readiness"),
 		gin.Recovery(),
 	)
