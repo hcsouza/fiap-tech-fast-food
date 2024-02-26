@@ -227,6 +227,22 @@ paths:
       tags:
       - Customer Routes
   /api/v1/order:
+    get:
+      consumes:
+      - application/json
+      description: Get all orders
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Order'
+            type: array
+      summary: Get all orders
+      tags:
+      - Order Routes
     post:
       consumes:
       - application/json

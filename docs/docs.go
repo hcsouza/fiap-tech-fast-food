@@ -156,6 +156,30 @@ const docTemplate = `{
             }
         },
         "/api/v1/order": {
+            "get": {
+                "description": "Get all orders",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order Routes"
+                ],
+                "summary": "Get all orders",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Order"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create new order",
                 "consumes": [

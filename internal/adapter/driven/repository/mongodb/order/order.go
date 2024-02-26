@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/repository"
 	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
@@ -13,6 +14,22 @@ type orderRepository struct {
 
 func NewOrderRepository(databaseAdapter repository.IDatabaseAdapter) *orderRepository {
 	return &orderRepository{databaseAdapter: databaseAdapter}
+}
+
+func (pr orderRepository) FindAll() ([]domain.Order, error) {
+	orders, err := pr.databaseAdapter.FindAll("", "")
+
+	if err != nil {
+		return nil, err
+	}
+
+	foundOrders := []domain.Order{}
+
+	for _, order := range orders {
+		foundOrders = append(foundOrders, order.(domain.Order))
+	}
+
+	return foundOrders, nil
 }
 
 func (or orderRepository) FindById(id string) (*domain.Order, error) {

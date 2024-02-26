@@ -46,7 +46,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:8080/api/v1/order/11d31b83-2ba7-4686-b208-da1b3ecfacac",
+						"url": "http://localhost:8080/api/v1/order/ef76245f-d697-4b41-bb95-3a7ada4b18ac",
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
 					},
 					"response": []
@@ -69,7 +69,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"customer\": \"19119119100\",\n    \"orderItems\": [\n        {\n            \"product\": \"1161308f-9cde-424a-a466-2ba43797ccc3\",\n            \"quantity\": 1\n        }\n    ]\n}",
+							"raw": "{\n    \"customer\": \"19119119100\",\n    \"orderItems\": [\n        {\n            \"product\": \"5ca80a7c-d49c-4843-8d28-44a7292db7c6\",\n            \"quantity\": 1\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -116,7 +116,16 @@
 					"request": {
 						"method": "PUT",
 						"header": [],
-						"url": "http://localhost:8080/api/v1/order/11d31b83-2ba7-4686-b208-da1b3ecfacac/status/COMPLETED"
+						"url": "http://localhost:8080/api/v1/order/6aafc3f9-e00d-484b-9514-ac23c148e2b8/status/READY"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/v1/order"
 					},
 					"response": []
 				}

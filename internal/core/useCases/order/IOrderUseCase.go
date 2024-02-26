@@ -21,6 +21,7 @@ type OrderItemDTO struct {
 }
 
 type IOrderUseCase interface {
+	FindAll() ([]domain.Order, error)
 	FindById(id string) (*domain.Order, error)
 	GetAllByStatus(status os.OrderStatus) ([]domain.Order, error)
 	CreateOrder(order OrderCreateDTO) (string, error)

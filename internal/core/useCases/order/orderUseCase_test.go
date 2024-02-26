@@ -2,12 +2,17 @@ package order_test
 
 import (
 	"errors"
+	"net/http"
 	"testing"
+	"time"
 
+	gw "github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driven/httpClient"
+	pg "github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driven/httpClient/paymentGateway"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/customer"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/order"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/product"
+	"github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/customTime"
 	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
 	"github.com/hcsouza/fiap-tech-fast-food/test/mocks"
 	"github.com/stretchr/testify/assert"
@@ -24,13 +29,17 @@ func TestOrderUseCase(t *testing.T) {
 	customerRepositoryMock := mocks.NewMockCustomerRepository(t)
 	customerUseCase := customer.NewCustomerUseCase(customerRepositoryMock)
 
+	client := http.Client{}
+	gateway := gw.NewGateway(client)
+	paymentGateway := pg.NewPaymentGateway(gateway)
+
 	t.Run("should return order by given id", func(t *testing.T) {
 		expectedOrder := &domain.Order{ID: "123"}
 
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
 		orderRepositoryMock.On("FindById", "123").Return(expectedOrder, nil)
 
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
+		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase, paymentGateway)
 
 		resultOrder, err := useCase.FindById("123")
 
@@ -42,7 +51,7 @@ func TestOrderUseCase(t *testing.T) {
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
 		orderRepositoryMock.On("FindById", "123").Return(nil, nil)
 
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
+		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase, paymentGateway)
 
 		resultOrder, err := useCase.FindById("123")
 
@@ -54,7 +63,7 @@ func TestOrderUseCase(t *testing.T) {
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
 		orderRepositoryMock.On("FindById", "789").Return(nil, errors.New("repository error"))
 
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
+		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase, paymentGateway)
 
 		result, err := useCase.FindById("789")
 
@@ -71,7 +80,7 @@ func TestOrderUseCase(t *testing.T) {
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
 		orderRepositoryMock.On("FindAllByStatus", ORDER_STARTED).Return(expectedOrders, nil)
 
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
+		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase, paymentGateway)
 
 		resultOrders, err := useCase.GetAllByStatus(ORDER_STARTED)
 
@@ -83,7 +92,7 @@ func TestOrderUseCase(t *testing.T) {
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
 		orderRepositoryMock.On("FindAllByStatus", ORDER_COMPLETED).Return([]domain.Order{}, nil)
 
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
+		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase, paymentGateway)
 
 		resultOrders, err := useCase.GetAllByStatus(ORDER_COMPLETED)
 
@@ -93,165 +102,192 @@ func TestOrderUseCase(t *testing.T) {
 
 	t.Run("should handle repository error", func(t *testing.T) {
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
-		orderRepositoryMock.On("FindAllByStatus", ORDER_PAYMENT_PENDING).Return(nil, errors.New("repository error"))
+		orderRepositoryMock.On("FindAllByStatus", ORDER_WAITING_PAYMENT).Return(nil, errors.New("repository error"))
 
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
+		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase, paymentGateway)
 
-		resultOrders, err := useCase.GetAllByStatus(ORDER_PAYMENT_PENDING)
+		resultOrders, err := useCase.GetAllByStatus(ORDER_WAITING_PAYMENT)
 
 		assert.Error(t, err)
 		assert.Nil(t, resultOrders)
 	})
 
-	t.Run("should update order with success", func(t *testing.T) {
-		orderId := "order-123"
-		existentOrder := &domain.Order{
-			ID:          orderId,
-			Customer:    domain.Customer{},
-			OrderStatus: ORDER_STARTED,
-			OrderItems: []domain.OrderItem{{
-				Product:  domain.Product{ID: "product-123"},
-				Quantity: 1,
-			}},
-			Amount: 10,
-		}
-		newOrder := order.OrderUpdateDTO{
-			Cpf: "19119119100",
-			OrderItemsDTO: []order.OrderItemDTO{{
-				ProductId: "product-123",
-				Quantity:  2,
-			}},
-		}
-		updatedOrder := &domain.Order{
-			ID:          orderId,
-			Customer:    domain.Customer{},
-			OrderStatus: ORDER_STARTED,
-			OrderItems:  []domain.OrderItem{{Product: domain.Product{ID: "product-123", Price: 5}, Quantity: 2}},
-			Amount:      10,
+	t.Run("should return all orders sorted by READY > PREPARING > RECEIVED", func(t *testing.T) {
+		expectedOrders := []domain.Order{
+			{ID: "1", OrderStatus: ORDER_BEING_PREPARED},
+			{ID: "2", OrderStatus: ORDER_RECEIVED},
+			{ID: "3", OrderStatus: ORDER_READY},
+			{ID: "4", OrderStatus: ORDER_READY},
+			{ID: "5", OrderStatus: ORDER_RECEIVED},
+			{ID: "6", OrderStatus: ORDER_BEING_PREPARED},
 		}
 
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
-		orderRepositoryMock.On("FindById", orderId).Return(existentOrder, nil)
-		productRepositoryMock.On("FindById", "product-123").Return(&domain.Product{ID: "product-123", Price: 5}, nil)
-		orderRepositoryMock.On("Update", updatedOrder).Return(nil)
+		orderRepositoryMock.On("FindAll").Return(expectedOrders, nil)
 
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
+		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase, paymentGateway)
 
-		err := useCase.UpdateOrder(orderId, newOrder)
+		resultOrders, err := useCase.FindAll()
 
-		assert.Nil(t, err)
+		assert.NoError(t, err)
+		assert.Len(t, resultOrders, len(expectedOrders))
+		assert.Equal(t, ORDER_READY, resultOrders[0].OrderStatus)
+		assert.Equal(t, ORDER_READY, resultOrders[1].OrderStatus)
+		assert.Equal(t, ORDER_BEING_PREPARED, resultOrders[2].OrderStatus)
+		assert.Equal(t, ORDER_BEING_PREPARED, resultOrders[3].OrderStatus)
+		assert.Equal(t, ORDER_RECEIVED, resultOrders[4].OrderStatus)
+		assert.Equal(t, ORDER_RECEIVED, resultOrders[4].OrderStatus)
 	})
 
-	t.Run("should not update order When status is diff of STARTED", func(t *testing.T) {
-		orderId := "order-123"
-		existentOrder := &domain.Order{
-			ID:          orderId,
-			Customer:    domain.Customer{},
-			OrderStatus: ORDER_PAYMENT_PENDING,
-			OrderItems: []domain.OrderItem{{
-				Product:  domain.Product{ID: "product-123"},
-				Quantity: 1,
+	t.Run("should return all orders sorted by createdAt", func(t *testing.T) {
+		currentTime := time.Now()
+
+		expectedOrders := []domain.Order{
+			{ID: "1", OrderStatus: ORDER_READY, CreatedAt: customTime.CustomTime{
+				Time: currentTime.Add(
+					time.Hour*time.Duration(2) +
+						time.Minute*time.Duration(0) +
+						time.Second*time.Duration(0),
+				),
 			}},
-			Amount: 10,
-		}
-		newOrder := order.OrderUpdateDTO{
-			Cpf: "19119119100",
-			OrderItemsDTO: []order.OrderItemDTO{{
-				ProductId: "product-123",
-				Quantity:  2,
+			{ID: "2", OrderStatus: ORDER_READY, CreatedAt: customTime.CustomTime{
+				Time: currentTime.Add(
+					time.Hour*time.Duration(1) +
+						time.Minute*time.Duration(0) +
+						time.Second*time.Duration(0),
+				),
+			}},
+			{ID: "3", OrderStatus: ORDER_BEING_PREPARED, CreatedAt: customTime.CustomTime{
+				Time: currentTime.Add(
+					time.Hour*time.Duration(4) +
+						time.Minute*time.Duration(0) +
+						time.Second*time.Duration(0),
+				),
+			}},
+			{ID: "4", OrderStatus: ORDER_BEING_PREPARED, CreatedAt: customTime.CustomTime{
+				Time: currentTime.Add(
+					time.Hour*time.Duration(3) +
+						time.Minute*time.Duration(0) +
+						time.Second*time.Duration(0),
+				),
+			}},
+			{ID: "5", OrderStatus: ORDER_RECEIVED, CreatedAt: customTime.CustomTime{
+				Time: currentTime.Add(
+					time.Hour*time.Duration(6) +
+						time.Minute*time.Duration(0) +
+						time.Second*time.Duration(0),
+				),
+			}},
+			{ID: "6", OrderStatus: ORDER_RECEIVED, CreatedAt: customTime.CustomTime{
+				Time: currentTime.Add(
+					time.Hour*time.Duration(5) +
+						time.Minute*time.Duration(0) +
+						time.Second*time.Duration(0),
+				),
 			}},
 		}
 
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
-		orderRepositoryMock.On("FindById", orderId).Return(existentOrder, nil)
+		orderRepositoryMock.On("FindAll").Return(expectedOrders, nil)
 
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
+		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase, paymentGateway)
 
-		err := useCase.UpdateOrder(orderId, newOrder)
+		resultOrders, err := useCase.FindAll()
 
-		assert.NotNil(t, err)
-		assert.Equal(t, err.Error(), "order cannot be updated cause status is PAYMENT_PENDING")
+		assert.NoError(t, err)
+		assert.Len(t, resultOrders, len(expectedOrders))
+		assert.Equal(t, resultOrders[0].OrderStatus, ORDER_READY)
+		assert.Equal(t, resultOrders[1].OrderStatus, ORDER_READY)
+		assert.Equal(t, resultOrders[2].OrderStatus, ORDER_BEING_PREPARED)
+		assert.Equal(t, resultOrders[3].OrderStatus, ORDER_BEING_PREPARED)
+		assert.Equal(t, resultOrders[4].OrderStatus, ORDER_RECEIVED)
+		assert.Equal(t, resultOrders[5].OrderStatus, ORDER_RECEIVED)
+		assert.True(t, resultOrders[0].CreatedAt.Before(resultOrders[1].CreatedAt.Time))
+		assert.True(t, resultOrders[1].CreatedAt.Before(resultOrders[2].CreatedAt.Time))
+		assert.True(t, resultOrders[2].CreatedAt.Before(resultOrders[3].CreatedAt.Time))
+		assert.True(t, resultOrders[3].CreatedAt.Before(resultOrders[4].CreatedAt.Time))
+		assert.True(t, resultOrders[4].CreatedAt.Before(resultOrders[5].CreatedAt.Time))
 	})
 
-	t.Run("should update order status with sucess", func(t *testing.T) {
-		orderId := "order-123"
-		existentOrder := &domain.Order{
-			ID:          orderId,
-			Customer:    domain.Customer{},
-			OrderStatus: ORDER_STARTED,
-			OrderItems: []domain.OrderItem{{
-				Product:  domain.Product{ID: "product-123"},
-				Quantity: 1,
+	t.Run("should return all orders without COMPLETED status", func(t *testing.T) {
+		currentTime := time.Now()
+
+		expectedOrders := []domain.Order{
+			{ID: "1", OrderStatus: ORDER_READY, CreatedAt: customTime.CustomTime{
+				Time: currentTime.Add(
+					time.Hour*time.Duration(2) +
+						time.Minute*time.Duration(0) +
+						time.Second*time.Duration(0),
+				),
 			}},
-			Amount: 10,
-		}
-		orderUpdated := &domain.Order{
-			ID:          orderId,
-			Customer:    domain.Customer{},
-			OrderStatus: ORDER_PAYMENT_PENDING,
-			OrderItems: []domain.OrderItem{{
-				Product:  domain.Product{ID: "product-123"},
-				Quantity: 1,
+			{ID: "2", OrderStatus: ORDER_READY, CreatedAt: customTime.CustomTime{
+				Time: currentTime.Add(
+					time.Hour*time.Duration(1) +
+						time.Minute*time.Duration(0) +
+						time.Second*time.Duration(0),
+				),
 			}},
-			Amount: 10,
-		}
-
-		orderRepositoryMock = mocks.NewMockOrderRepository(t)
-		orderRepositoryMock.On("FindById", orderId).Return(existentOrder, nil)
-		orderRepositoryMock.On("Update", orderUpdated).Return(nil)
-
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
-
-		err := useCase.UpdateOrderStatus(orderId, ORDER_PAYMENT_PENDING)
-
-		assert.Nil(t, err)
-	})
-
-	t.Run("should not update order status When new status is some previous status", func(t *testing.T) {
-		orderId := "order-123"
-		existentOrder := &domain.Order{
-			ID:          orderId,
-			Customer:    domain.Customer{},
-			OrderStatus: ORDER_PAYMENT_PENDING,
-			OrderItems: []domain.OrderItem{{
-				Product:  domain.Product{ID: "product-123"},
-				Quantity: 1,
+			{ID: "3", OrderStatus: ORDER_BEING_PREPARED, CreatedAt: customTime.CustomTime{
+				Time: currentTime.Add(
+					time.Hour*time.Duration(4) +
+						time.Minute*time.Duration(0) +
+						time.Second*time.Duration(0),
+				),
 			}},
-			Amount: 10,
-		}
-
-		orderRepositoryMock = mocks.NewMockOrderRepository(t)
-		orderRepositoryMock.On("FindById", orderId).Return(existentOrder, nil)
-
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
-
-		err := useCase.UpdateOrderStatus(orderId, ORDER_STARTED)
-
-		assert.NotNil(t, err)
-		assert.Equal(t, err.Error(), "order status PAYMENT_PENDING cannot updated to previous status STARTED")
-	})
-
-	t.Run("should not update order status When new status is not a valid next status", func(t *testing.T) {
-		orderId := "order-123"
-		existentOrder := &domain.Order{
-			ID:          orderId,
-			Customer:    domain.Customer{},
-			OrderStatus: ORDER_PAYMENT_PENDING,
-			OrderItems: []domain.OrderItem{{
-				Product:  domain.Product{ID: "product-123"},
-				Quantity: 1,
+			{ID: "4", OrderStatus: ORDER_COMPLETED, CreatedAt: customTime.CustomTime{
+				Time: currentTime.Add(
+					time.Hour*time.Duration(4) +
+						time.Minute*time.Duration(0) +
+						time.Second*time.Duration(0),
+				),
 			}},
-			Amount: 10,
+			{ID: "5", OrderStatus: ORDER_BEING_PREPARED, CreatedAt: customTime.CustomTime{
+				Time: currentTime.Add(
+					time.Hour*time.Duration(3) +
+						time.Minute*time.Duration(0) +
+						time.Second*time.Duration(0),
+				),
+			}},
+			{ID: "6", OrderStatus: ORDER_RECEIVED, CreatedAt: customTime.CustomTime{
+				Time: currentTime.Add(
+					time.Hour*time.Duration(6) +
+						time.Minute*time.Duration(0) +
+						time.Second*time.Duration(0),
+				),
+			}},
+			{ID: "7", OrderStatus: ORDER_RECEIVED, CreatedAt: customTime.CustomTime{
+				Time: currentTime.Add(
+					time.Hour*time.Duration(5) +
+						time.Minute*time.Duration(0) +
+						time.Second*time.Duration(0),
+				),
+			}},
 		}
 
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
-		orderRepositoryMock.On("FindById", orderId).Return(existentOrder, nil)
+		orderRepositoryMock.On("FindAll").Return(expectedOrders, nil)
 
-		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase)
+		useCase := order.NewOrderUseCase(orderRepositoryMock, productUseCase, customerUseCase, paymentGateway)
 
-		err := useCase.UpdateOrderStatus(orderId, ORDER_READY)
+		resultOrders, err := useCase.FindAll()
 
-		assert.NotNil(t, err)
-		assert.Equal(t, err.Error(), "order status PAYMENT_PENDING cannot be updated to READY. Status available are: [PAYMENT_APPROVED PAYMENT_REFUSED]")
+		assert.NoError(t, err)
+		assert.Len(t, resultOrders, len(expectedOrders)-1)
+
+		for _, order := range resultOrders {
+			assert.NotEqual(t, ORDER_COMPLETED, order.OrderStatus)
+		}
+
+		assert.Equal(t, resultOrders[0].OrderStatus, ORDER_READY)
+		assert.Equal(t, resultOrders[1].OrderStatus, ORDER_READY)
+		assert.Equal(t, resultOrders[2].OrderStatus, ORDER_BEING_PREPARED)
+		assert.Equal(t, resultOrders[3].OrderStatus, ORDER_BEING_PREPARED)
+		assert.Equal(t, resultOrders[4].OrderStatus, ORDER_RECEIVED)
+		assert.Equal(t, resultOrders[5].OrderStatus, ORDER_RECEIVED)
+		assert.True(t, resultOrders[0].CreatedAt.Before(resultOrders[1].CreatedAt.Time))
+		assert.True(t, resultOrders[1].CreatedAt.Before(resultOrders[2].CreatedAt.Time))
+		assert.True(t, resultOrders[2].CreatedAt.Before(resultOrders[3].CreatedAt.Time))
+		assert.True(t, resultOrders[3].CreatedAt.Before(resultOrders[4].CreatedAt.Time))
+		assert.True(t, resultOrders[4].CreatedAt.Before(resultOrders[5].CreatedAt.Time))
 	})
 }

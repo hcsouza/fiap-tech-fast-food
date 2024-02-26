@@ -6,6 +6,7 @@ import (
 )
 
 type OrderRepository interface {
+	FindAll() ([]domain.Order, error)
 	FindById(id string) (*domain.Order, error)
 	FindAllByStatus(status OrderStatus) ([]domain.Order, error)
 	Save(order *domain.Order) (string, error)

@@ -22,11 +22,31 @@ func NewOrderHandler(gRouter *gin.RouterGroup, interactor order.IOrderUseCase) {
 		interactor: interactor,
 	}
 
+	gRouter.GET("/order", handler.FindAllHandler)
 	gRouter.GET("/order/:id", handler.FindByIdHandler)
 	gRouter.GET("/order/status/:status", handler.GetAllByStatusHandler)
 	gRouter.POST("/order", handler.CreateOrderHandler)
 	gRouter.PUT("/order/:id", handler.UpdateOrderHandler)
 	gRouter.PUT("/order/:id/status/:status", handler.UpdateStatusOrderHandler)
+}
+
+// Get All Orders godoc
+// @Summary Get all orders
+// @Description Get all orders
+// @Tags Order Routes
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} domain.Order{}
+// @Router /api/v1/order [get]
+func (handler *orderHandler) FindAllHandler(c *gin.Context) {
+	orders, err := handler.interactor.FindAll()
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, orders)
 }
 
 // Get Order godoc
