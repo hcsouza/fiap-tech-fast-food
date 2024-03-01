@@ -226,6 +226,6 @@ func sortByStatus(firstOrder domain.Order, secondOrder domain.Order) bool {
 }
 
 func sortByCreatedAt(firstOrder domain.Order, secondOrder domain.Order) bool {
-	return !secondOrder.CreatedAt.Equal(firstOrder.CreatedAt.Time) &&
-		secondOrder.CreatedAt.Before(firstOrder.CreatedAt.Time)
+	return !secondOrder.CreatedAt.Equal(firstOrder.CreatedAt) &&
+		secondOrder.CreatedAt.Before(firstOrder.CreatedAt)
 }

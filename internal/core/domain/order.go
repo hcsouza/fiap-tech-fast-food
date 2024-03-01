@@ -13,8 +13,8 @@ type Order struct {
 	Customer    Customer                `json:"customer,omitempty"`
 	OrderStatus orderStatus.OrderStatus `json:"orderStatus"`
 	OrderItems  []OrderItem             `json:"orderItems"`
-	CreatedAt   ct.CustomTime           `json:"createdAt" bson:"createdAt"`
-	UpdatedAt   ct.CustomTime           `json:"updatedAt" bson:"updatedAt"`
+	CreatedAt   time.Time               `json:"createdAt" bson:"createdAt"`
+	UpdatedAt   time.Time               `json:"updatedAt" bson:"updatedAt"`
 	Amount      float64                 `json:"amount"`
 }
 

@@ -9,7 +9,6 @@ import (
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/customer"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/order"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/product"
-	"github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/customTime"
 	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
 	"github.com/hcsouza/fiap-tech-fast-food/test/mocks"
 	"github.com/stretchr/testify/assert"
@@ -132,34 +131,30 @@ func TestOrderUseCase(t *testing.T) {
 		currentTime := time.Now()
 
 		expectedOrders := []domain.Order{
-			{ID: "1", OrderStatus: ORDER_READY, CreatedAt: customTime.CustomTime{
-				Time: currentTime.Add(
-					time.Hour*time.Duration(2) +
-						time.Minute*time.Duration(0) +
-						time.Second*time.Duration(0),
-				),
-			}},
-			{ID: "2", OrderStatus: ORDER_READY, CreatedAt: customTime.CustomTime{
-				Time: currentTime.Add(
-					time.Hour*time.Duration(1) +
-						time.Minute*time.Duration(0) +
-						time.Second*time.Duration(0),
-				),
-			}},
-			{ID: "3", OrderStatus: ORDER_BEING_PREPARED, CreatedAt: customTime.CustomTime{
-				Time: currentTime.Add(
-					time.Hour*time.Duration(4) +
-						time.Minute*time.Duration(0) +
-						time.Second*time.Duration(0),
-				),
-			}},
-			{ID: "4", OrderStatus: ORDER_BEING_PREPARED, CreatedAt: customTime.CustomTime{
-				Time: currentTime.Add(
-					time.Hour*time.Duration(3) +
-						time.Minute*time.Duration(0) +
-						time.Second*time.Duration(0),
-				),
-			}},
+			{ID: "1", OrderStatus: ORDER_READY, CreatedAt: currentTime.Add(
+				time.Hour*time.Duration(2) +
+					time.Minute*time.Duration(0) +
+					time.Second*time.Duration(0),
+			),
+			},
+			{ID: "2", OrderStatus: ORDER_READY, CreatedAt: currentTime.Add(
+				time.Hour*time.Duration(1) +
+					time.Minute*time.Duration(0) +
+					time.Second*time.Duration(0),
+			),
+			},
+			{ID: "3", OrderStatus: ORDER_BEING_PREPARED, CreatedAt: currentTime.Add(
+				time.Hour*time.Duration(4) +
+					time.Minute*time.Duration(0) +
+					time.Second*time.Duration(0),
+			),
+			},
+			{ID: "4", OrderStatus: ORDER_BEING_PREPARED, CreatedAt: currentTime.Add(
+				time.Hour*time.Duration(3) +
+					time.Minute*time.Duration(0) +
+					time.Second*time.Duration(0),
+			),
+			},
 		}
 
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
@@ -175,50 +170,44 @@ func TestOrderUseCase(t *testing.T) {
 		assert.Equal(t, resultOrders[1].OrderStatus, ORDER_READY)
 		assert.Equal(t, resultOrders[2].OrderStatus, ORDER_BEING_PREPARED)
 		assert.Equal(t, resultOrders[3].OrderStatus, ORDER_BEING_PREPARED)
-		assert.True(t, resultOrders[0].CreatedAt.Before(resultOrders[1].CreatedAt.Time))
-		assert.True(t, resultOrders[1].CreatedAt.Before(resultOrders[2].CreatedAt.Time))
-		assert.True(t, resultOrders[2].CreatedAt.Before(resultOrders[3].CreatedAt.Time))
+		assert.True(t, resultOrders[0].CreatedAt.Before(resultOrders[1].CreatedAt))
+		assert.True(t, resultOrders[1].CreatedAt.Before(resultOrders[2].CreatedAt))
+		assert.True(t, resultOrders[2].CreatedAt.Before(resultOrders[3].CreatedAt))
 	})
 
 	t.Run("should return all orders without COMPLETED status", func(t *testing.T) {
 		currentTime := time.Now()
 
 		expectedOrders := []domain.Order{
-			{ID: "1", OrderStatus: ORDER_READY, CreatedAt: customTime.CustomTime{
-				Time: currentTime.Add(
-					time.Hour*time.Duration(2) +
-						time.Minute*time.Duration(0) +
-						time.Second*time.Duration(0),
-				),
-			}},
-			{ID: "2", OrderStatus: ORDER_READY, CreatedAt: customTime.CustomTime{
-				Time: currentTime.Add(
-					time.Hour*time.Duration(1) +
-						time.Minute*time.Duration(0) +
-						time.Second*time.Duration(0),
-				),
-			}},
-			{ID: "3", OrderStatus: ORDER_BEING_PREPARED, CreatedAt: customTime.CustomTime{
-				Time: currentTime.Add(
-					time.Hour*time.Duration(4) +
-						time.Minute*time.Duration(0) +
-						time.Second*time.Duration(0),
-				),
-			}},
-			{ID: "4", OrderStatus: ORDER_COMPLETED, CreatedAt: customTime.CustomTime{
-				Time: currentTime.Add(
-					time.Hour*time.Duration(4) +
-						time.Minute*time.Duration(0) +
-						time.Second*time.Duration(0),
-				),
-			}},
-			{ID: "5", OrderStatus: ORDER_BEING_PREPARED, CreatedAt: customTime.CustomTime{
-				Time: currentTime.Add(
-					time.Hour*time.Duration(3) +
-						time.Minute*time.Duration(0) +
-						time.Second*time.Duration(0),
-				),
-			}},
+			{ID: "1", OrderStatus: ORDER_READY, CreatedAt: currentTime.Add(
+				time.Hour*time.Duration(2) +
+					time.Minute*time.Duration(0) +
+					time.Second*time.Duration(0),
+			)},
+			{ID: "2", OrderStatus: ORDER_READY, CreatedAt: currentTime.Add(
+				time.Hour*time.Duration(1) +
+					time.Minute*time.Duration(0) +
+					time.Second*time.Duration(0),
+			),
+			},
+			{ID: "3", OrderStatus: ORDER_BEING_PREPARED, CreatedAt: currentTime.Add(
+				time.Hour*time.Duration(4) +
+					time.Minute*time.Duration(0) +
+					time.Second*time.Duration(0),
+			),
+			},
+			{ID: "4", OrderStatus: ORDER_COMPLETED, CreatedAt: currentTime.Add(
+				time.Hour*time.Duration(4) +
+					time.Minute*time.Duration(0) +
+					time.Second*time.Duration(0),
+			),
+			},
+			{ID: "5", OrderStatus: ORDER_BEING_PREPARED, CreatedAt: currentTime.Add(
+				time.Hour*time.Duration(3) +
+					time.Minute*time.Duration(0) +
+					time.Second*time.Duration(0),
+			),
+			},
 		}
 
 		orderRepositoryMock = mocks.NewMockOrderRepository(t)
@@ -239,8 +228,8 @@ func TestOrderUseCase(t *testing.T) {
 		assert.Equal(t, resultOrders[1].OrderStatus, ORDER_READY)
 		assert.Equal(t, resultOrders[2].OrderStatus, ORDER_BEING_PREPARED)
 		assert.Equal(t, resultOrders[3].OrderStatus, ORDER_BEING_PREPARED)
-		assert.True(t, resultOrders[0].CreatedAt.Before(resultOrders[1].CreatedAt.Time))
-		assert.True(t, resultOrders[1].CreatedAt.Before(resultOrders[2].CreatedAt.Time))
-		assert.True(t, resultOrders[2].CreatedAt.Before(resultOrders[3].CreatedAt.Time))
+		assert.True(t, resultOrders[0].CreatedAt.Before(resultOrders[1].CreatedAt))
+		assert.True(t, resultOrders[1].CreatedAt.Before(resultOrders[2].CreatedAt))
+		assert.True(t, resultOrders[2].CreatedAt.Before(resultOrders[3].CreatedAt))
 	})
 }
