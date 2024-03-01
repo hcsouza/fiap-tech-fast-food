@@ -6,7 +6,6 @@ import (
 
 	repository "github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driven/repository/mongodb/product"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
-	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/category"
 	"github.com/hcsouza/fiap-tech-fast-food/test/mocks"
 	"github.com/stretchr/testify/assert"
 )
@@ -57,7 +56,7 @@ func TestProductRepository(t *testing.T) {
 
 		productRepository := repository.NewProductRepository(databaseAdapter)
 
-		products, err := productRepository.FindAllByCategory(Category(string(category)))
+		products, err := productRepository.FindAllByCategory(string(category))
 
 		assert.Nil(t, err)
 		assert.Len(t, len(products), 2)
@@ -72,7 +71,7 @@ func TestProductRepository(t *testing.T) {
 
 		productRepository := repository.NewProductRepository(databaseAdapter)
 
-		products, err := productRepository.FindAllByCategory(Category(string(category)))
+		products, err := productRepository.FindAllByCategory(string(category))
 
 		assert.Nil(t, err)
 		assert.Len(t, len(products), 0)
@@ -84,7 +83,7 @@ func TestProductRepository(t *testing.T) {
 
 		productRepository := repository.NewProductRepository(databaseAdapter)
 
-		products, err := productRepository.FindAllByCategory(Category(string(category)))
+		products, err := productRepository.FindAllByCategory(string(category))
 
 		assert.NotNil(t, err)
 		assert.Nil(t, products)

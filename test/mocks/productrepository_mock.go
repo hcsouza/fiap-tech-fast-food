@@ -4,7 +4,6 @@ package mocks
 
 import (
 	domain "github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
-	category "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/category"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -126,7 +125,7 @@ func (_c *MockProductRepository_FindAll_Call) RunAndReturn(run func() ([]domain.
 }
 
 // FindAllByCategory provides a mock function with given fields: _a0
-func (_m *MockProductRepository) FindAllByCategory(_a0 category.Category) ([]domain.Product, error) {
+func (_m *MockProductRepository) FindAllByCategory(_a0 string) ([]domain.Product, error) {
 	ret := _m.Called(_a0)
 
 	if len(ret) == 0 {
@@ -135,10 +134,10 @@ func (_m *MockProductRepository) FindAllByCategory(_a0 category.Category) ([]dom
 
 	var r0 []domain.Product
 	var r1 error
-	if rf, ok := ret.Get(0).(func(category.Category) ([]domain.Product, error)); ok {
+	if rf, ok := ret.Get(0).(func(string) ([]domain.Product, error)); ok {
 		return rf(_a0)
 	}
-	if rf, ok := ret.Get(0).(func(category.Category) []domain.Product); ok {
+	if rf, ok := ret.Get(0).(func(string) []domain.Product); ok {
 		r0 = rf(_a0)
 	} else {
 		if ret.Get(0) != nil {
@@ -146,7 +145,7 @@ func (_m *MockProductRepository) FindAllByCategory(_a0 category.Category) ([]dom
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(category.Category) error); ok {
+	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(_a0)
 	} else {
 		r1 = ret.Error(1)
@@ -166,9 +165,9 @@ func (_e *MockProductRepository_Expecter) FindAllByCategory(_a0 interface{}) *Mo
 	return &MockProductRepository_FindAllByCategory_Call{Call: _e.mock.On("FindAllByCategory", _a0)}
 }
 
-func (_c *MockProductRepository_FindAllByCategory_Call) Run(run func(_a0 category.Category)) *MockProductRepository_FindAllByCategory_Call {
+func (_c *MockProductRepository_FindAllByCategory_Call) Run(run func(_a0 string)) *MockProductRepository_FindAllByCategory_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(category.Category))
+		run(args[0].(string))
 	})
 	return _c
 }
@@ -178,7 +177,7 @@ func (_c *MockProductRepository_FindAllByCategory_Call) Return(_a0 []domain.Prod
 	return _c
 }
 
-func (_c *MockProductRepository_FindAllByCategory_Call) RunAndReturn(run func(category.Category) ([]domain.Product, error)) *MockProductRepository_FindAllByCategory_Call {
+func (_c *MockProductRepository_FindAllByCategory_Call) RunAndReturn(run func(string) ([]domain.Product, error)) *MockProductRepository_FindAllByCategory_Call {
 	_c.Call.Return(run)
 	return _c
 }

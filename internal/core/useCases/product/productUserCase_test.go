@@ -5,7 +5,7 @@ import (
 
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/product"
-	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/category"
+	categoryValueObject "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/category"
 	"github.com/hcsouza/fiap-tech-fast-food/test/mocks"
 	"github.com/stretchr/testify/assert"
 )
@@ -21,13 +21,13 @@ func TestProductUseCase(t *testing.T) {
 				ID:       "found",
 				Name:     "x-salada",
 				Price:    10.0,
-				Category: Category("lanche"),
+				Category: "lanche",
 			},
 			{
 				ID:       "foundb",
 				Name:     "coca-cola",
 				Price:    5.0,
-				Category: Category("bebida"),
+				Category: "bebida",
 			},
 		}
 
@@ -48,13 +48,13 @@ func TestProductUseCase(t *testing.T) {
 		assert.Equal(t, products[1].ID, expected[1].ID)
 	})
 	t.Run("should return products by category", func(t *testing.T) {
-		category := Category("lanche")
+		category, _ := categoryValueObject.NewCategory("lanche")
 		expected := []domain.Product{
 			{
 				ID:       "found",
 				Name:     "x-salada",
 				Price:    10.0,
-				Category: Category("lanche"),
+				Category: "lanche",
 			},
 		}
 
@@ -73,11 +73,12 @@ func TestProductUseCase(t *testing.T) {
 		newProduct := &domain.Product{
 			Name:     "x-salada",
 			Price:    10.0,
-			Category: Category("lanche"),
+			Category: "lanche",
 		}
 
+		normalizedProduct, _ := newProduct.Normalize()
 		productRepositoryMock = mocks.NewMockProductRepository(t)
-		productRepositoryMock.On("Save", newProduct.Normalize()).Return(nil)
+		productRepositoryMock.On("Save", normalizedProduct).Return(nil)
 
 		useCase := product.NewProductUseCase(productRepositoryMock)
 
@@ -90,11 +91,12 @@ func TestProductUseCase(t *testing.T) {
 			ID:       "found",
 			Name:     "x-salada",
 			Price:    10.0,
-			Category: Category("lanche"),
+			Category: "lanche",
 		}
 
+		normalizedProduct, _ := newProduct.Normalize()
 		productRepositoryMock = mocks.NewMockProductRepository(t)
-		productRepositoryMock.On("Update", newProduct.Normalize()).Return(nil)
+		productRepositoryMock.On("Update", normalizedProduct).Return(nil)
 
 		useCase := product.NewProductUseCase(productRepositoryMock)
 

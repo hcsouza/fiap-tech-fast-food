@@ -5,7 +5,6 @@ import (
 
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/repository"
-	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/category"
 )
 
 type productUseCase struct {
@@ -47,7 +46,7 @@ func (interactor *productUseCase) GetAll() ([]domain.Product, error) {
 	return products, nil
 }
 
-func (interactor *productUseCase) GetByCategory(category Category) ([]domain.Product, error) {
+func (interactor *productUseCase) GetByCategory(category string) ([]domain.Product, error) {
 	products, err := interactor.repository.FindAllByCategory(category)
 
 	if err != nil {
@@ -58,7 +57,13 @@ func (interactor *productUseCase) GetByCategory(category Category) ([]domain.Pro
 }
 
 func (interactor *productUseCase) Create(product *domain.Product) error {
-	err := interactor.repository.Save(product.Normalize())
+	normalizedProduct, err := product.Normalize()
+
+	if err != nil {
+		return err
+	}
+
+	err = interactor.repository.Save(normalizedProduct)
 
 	if err != nil {
 		return err
@@ -69,8 +74,13 @@ func (interactor *productUseCase) Create(product *domain.Product) error {
 
 func (interactor *productUseCase) Update(productId string, product *domain.Product) error {
 	product.ID = productId
+	normalizedProduct, err := product.Normalize()
 
-	err := interactor.repository.Update(product.Normalize())
+	if err != nil {
+		return err
+	}
+
+	err = interactor.repository.Update(normalizedProduct)
 
 	if err != nil {
 		return err

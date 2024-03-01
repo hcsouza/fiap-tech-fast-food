@@ -8,28 +8,33 @@ import (
 
 func TestCategory(t *testing.T) {
 	t.Run("should return true when category is Lanche", func(t *testing.T) {
-		category := Category("Lanche")
+		category, err := NewCategory("Lanche")
 
-		assert.True(t, category.IsValid())
+		assert.Equal(t, category, "lanche")
+		assert.Nil(t, err)
 	})
 	t.Run("should return true when category is Bebida", func(t *testing.T) {
-		category := Category("Bebida")
+		category, err := NewCategory("Bebida")
 
-		assert.True(t, category.IsValid())
+		assert.Equal(t, category, "bebida")
+		assert.Nil(t, err)
 	})
 	t.Run("should return true when category is Acompanhamento", func(t *testing.T) {
-		category := Category("Acompanhamento")
+		category, err := NewCategory("Acompanhamento")
 
-		assert.True(t, category.IsValid())
+		assert.Equal(t, category, "acompanhamento")
+		assert.Nil(t, err)
 	})
 	t.Run("should return true when category is Sobremesa", func(t *testing.T) {
-		category := Category("Sobremesa")
+		category, err := NewCategory("Sobremesa")
 
-		assert.True(t, category.IsValid())
+		assert.Equal(t, category, "sobremesa")
+		assert.Nil(t, err)
 	})
 	t.Run("should return false when category is unkown", func(t *testing.T) {
-		category := Category("Não mapeada")
+		category, err := NewCategory("Não mapeada")
 
-		assert.False(t, category.IsValid())
+		assert.Equal(t, category, "")
+		assert.NotNil(t, err)
 	})
 }

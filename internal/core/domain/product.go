@@ -4,24 +4,20 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/category"
+	categoryValueObject "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/category"
 )
 
 type Product struct {
-	ID       string   `json:"_id" bson:"_id"`
-	Name     string   `json:"name"`
-	Price    float64  `json:"price"`
-	Category Category `json:"category"`
+	ID       string  `json:"_id" bson:"_id"`
+	Name     string  `json:"name"`
+	Price    float64 `json:"price"`
+	Category string  `json:"category"`
 }
 
 type ProductDTO struct {
-	Name     string   `json:"name"`
-	Price    float64  `json:"price"`
-	Category Category `json:"category"`
-}
-
-func (p *Product) IsValidCategory() bool {
-	return p.Category.IsValid()
+	Name     string  `json:"name"`
+	Price    float64 `json:"price"`
+	Category string  `json:"category"`
 }
 
 func (p *Product) IsValidPrice() bool {
@@ -32,17 +28,23 @@ func (p *Product) IsValidName() bool {
 	return p.Name != ""
 }
 
-func (p *Product) Normalize() *Product {
+func (p *Product) Normalize() (*Product, error) {
 	if p.ID == "" {
 		p.ID = uuid.New().String()
+	}
+
+	category, err := categoryValueObject.NewCategory(p.Category)
+
+	if err != nil {
+		return &Product{}, err
 	}
 
 	return &Product{
 		ID:       p.ID,
 		Name:     strings.ToLower(p.Name),
 		Price:    p.Price,
-		Category: Category(strings.ToLower(string(p.Category))),
-	}
+		Category: category,
+	}, nil
 }
 
 func (p *Product) ToSaveMongo() map[string]interface{} {

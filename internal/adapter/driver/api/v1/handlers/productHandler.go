@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/domain"
 	"github.com/hcsouza/fiap-tech-fast-food/internal/core/useCases/product"
-	. "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/category"
+	categoryValueObject "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/category"
 )
 
 type productHandler struct {
@@ -54,19 +54,20 @@ func (handler *productHandler) GetAllProductsHandler(c *gin.Context) {
 // @Success 200 {array} domain.Product{}
 // @Router /api/v1/product/{category} [get]
 func (handler *productHandler) GetProductByCategoryHandler(c *gin.Context) {
-	category, exists := c.Params.Get("category")
+	supposedCategory, exists := c.Params.Get("category")
+	category, err := categoryValueObject.NewCategory(supposedCategory)
 
 	if !exists {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "category is required"})
 		return
 	}
 
-	if category == "" || !Category(category).IsValid() {
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid category"})
 		return
 	}
 
-	products, err := handler.interactor.GetByCategory(Category(category))
+	products, err := handler.interactor.GetByCategory(category)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -92,7 +93,9 @@ func (handler *productHandler) CreateProductHandler(c *gin.Context) {
 		return
 	}
 
-	if !product.IsValidCategory() {
+	_, err := categoryValueObject.NewCategory(product.Category)
+
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid category"})
 		return
 	}
@@ -107,7 +110,7 @@ func (handler *productHandler) CreateProductHandler(c *gin.Context) {
 		return
 	}
 
-	err := handler.interactor.Create(&product)
+	err = handler.interactor.Create(&product)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -141,7 +144,9 @@ func (handler *productHandler) UpdateProductHandler(c *gin.Context) {
 		return
 	}
 
-	if !product.IsValidCategory() {
+	_, err := categoryValueObject.NewCategory(product.Category)
+
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid category"})
 		return
 	}
@@ -156,7 +161,7 @@ func (handler *productHandler) UpdateProductHandler(c *gin.Context) {
 		return
 	}
 
-	err := handler.interactor.Update(productId, &product)
+	err = handler.interactor.Update(productId, &product)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

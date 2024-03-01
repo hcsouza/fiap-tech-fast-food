@@ -5,17 +5,17 @@ import (
 
 	"github.com/google/uuid"
 	ct "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/customTime"
-	os "github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
+	"github.com/hcsouza/fiap-tech-fast-food/internal/core/valueObject/orderStatus"
 )
 
 type Order struct {
-	ID          string         `json:"_id" bson:"_id"`
-	Customer    Customer       `json:"customer,omitempty"`
-	OrderStatus os.OrderStatus `json:"orderStatus"`
-	OrderItems  []OrderItem    `json:"orderItems"`
-	CreatedAt   ct.CustomTime  `json:"createdAt" bson:"createdAt"`
-	UpdatedAt   ct.CustomTime  `json:"updatedAt" bson:"updatedAt"`
-	Amount      float64        `json:"amount"`
+	ID          string                  `json:"_id" bson:"_id"`
+	Customer    Customer                `json:"customer,omitempty"`
+	OrderStatus orderStatus.OrderStatus `json:"orderStatus"`
+	OrderItems  []OrderItem             `json:"orderItems"`
+	CreatedAt   ct.CustomTime           `json:"createdAt" bson:"createdAt"`
+	UpdatedAt   ct.CustomTime           `json:"updatedAt" bson:"updatedAt"`
+	Amount      float64                 `json:"amount"`
 }
 
 type OrderItem struct {
