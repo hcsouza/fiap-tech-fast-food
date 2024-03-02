@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: fiap-tech-fast-food-container
-          image: salehkhalil33/fiap-tech-fast-food:v1-rc1
+          image: salehkhalil33/fiap-tech-fast-food:v1
           ports:
             - containerPort: 8080
           resources:
