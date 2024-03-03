@@ -12,7 +12,7 @@ type orderGateway struct {
 	datasource interfaces.DatabaseSource
 }
 
-func NewOrderRepository(datasource interfaces.DatabaseSource) interfaces.OrderGateway {
+func NewOrderGateway(datasource interfaces.DatabaseSource) interfaces.OrderGateway {
 	return &orderGateway{datasource: datasource}
 }
 
