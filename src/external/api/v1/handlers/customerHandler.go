@@ -45,10 +45,10 @@ func NewCustomerHandler(gRouter *gin.RouterGroup, interactor *controller.Custome
 // @Summary Create a new customer
 // @Description Create a new customer
 // @Tags Customer Routes
-// @Param        data    body     customer.CustomerCreateDTO  true  "Customer information"
+// @Param        data    body     dto.CustomerCreateDTO  true  "Customer information"
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} domain.Customer{}
+// @Success 200 {object} entity.Customer{}
 // @Router /api/v1/customer [post]
 func (handler *customerHandler) CreateCustomerHandler(ctx *gin.Context) {
 	var createRequest dto.CustomerCreateDTO
@@ -85,7 +85,7 @@ func (handler *customerHandler) CreateCustomerHandler(ctx *gin.Context) {
 // @Param        cpf    query     string  true  "19119119100"
 // @Accept  json
 // @Produce  json
-// @Success 200 {array} domain.Customer{}
+// @Success 200 {array} entity.Customer{}
 // @Router /api/v1/customer [get]
 func (handler *customerHandler) GetCustomerHandler(ctx *gin.Context) {
 	cpf := ctx.Query("cpf")

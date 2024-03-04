@@ -34,7 +34,7 @@ func NewCheckoutHandler(gRouter *gin.RouterGroup, interactor *controller.Checkou
 // @Param        id   path      string  true  "Order ID"
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} checkout.CreateCheckout{}
+// @Success 200 {object} dto.CreateCheckout{}
 // @Router /api/v1/checkout/:id [post]
 func (handler checkoutHandler) CreateCheckout(c *gin.Context) {
 	var response dto.CreateCheckout
@@ -68,7 +68,7 @@ func (handler checkoutHandler) CreateCheckout(c *gin.Context) {
 // @Description Update checkout callback
 // @Tags Checkout Routes
 // @Param        id   path      string  true  "Order ID"
-// @Param        data   body      checkout.UpdateCheckoutDTO  true  "Order payment result status: approved, refused."
+// @Param        data   body      dto.UpdateCheckoutDTO  true  "Order payment result status: approved, refused."
 // @Accept  json
 // @Produce  json
 // @Success 204 {object} interface{}

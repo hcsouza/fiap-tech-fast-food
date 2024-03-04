@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/hcsouza/fiap-tech-fast-food/src/core/entity"
-	vo "github.com/hcsouza/fiap-tech-fast-food/src/core/valueObject"
+	valueobject "github.com/hcsouza/fiap-tech-fast-food/src/core/valueObject"
 	"github.com/hcsouza/fiap-tech-fast-food/src/operation/controller"
 )
 
@@ -32,7 +32,7 @@ func NewProductHandler(gRouter *gin.RouterGroup, interactor *controller.ProductC
 // @Tags Product Routes
 // @Accept  json
 // @Produce  json
-// @Success 200 {array} domain.Product{}
+// @Success 200 {array} entity.Product{}
 // @Router /api/v1/product [get]
 func (handler *productHandler) GetAllProductsHandler(c *gin.Context) {
 	actions, err := handler.interactor.GetAll()
@@ -52,7 +52,7 @@ func (handler *productHandler) GetAllProductsHandler(c *gin.Context) {
 // @Param        category   path      string  true  "acompanhamento, bebida, lanche or sobremesa"
 // @Accept  json
 // @Produce  json
-// @Success 200 {array} domain.Product{}
+// @Success 200 {array} entity.Product{}
 // @Router /api/v1/product/{category} [get]
 func (handler *productHandler) GetProductByCategoryHandler(c *gin.Context) {
 	category, exists := c.Params.Get("category")
@@ -62,12 +62,12 @@ func (handler *productHandler) GetProductByCategoryHandler(c *gin.Context) {
 		return
 	}
 
-	if category == "" || !vo.Category(category).IsValid() {
+	if category == "" || !valueobject.Category(category).IsValid() {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid category"})
 		return
 	}
 
-	products, err := handler.interactor.GetByCategory(vo.Category(category))
+	products, err := handler.interactor.GetByCategory(valueobject.Category(category))
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -81,7 +81,7 @@ func (handler *productHandler) GetProductByCategoryHandler(c *gin.Context) {
 // @Summary Create new product
 // @Description Create new product
 // @Tags Product Routes
-// @Param        data   body      domain.ProductDTO  true  "Product information"
+// @Param        data   body      entity.Product  true  "Product information"
 // @Accept  json
 // @Produce  json
 // @Success 200
@@ -123,7 +123,7 @@ func (handler *productHandler) CreateProductHandler(c *gin.Context) {
 // @Description Update product
 // @Tags Product Routes
 // @Param        id   path      string  true  "Product ID"
-// @Param        data   body      domain.ProductDTO  true  "Product information"
+// @Param        data   body      entity.Product  true  "Product information"
 // @Accept  json
 // @Produce  json
 // @Success 200

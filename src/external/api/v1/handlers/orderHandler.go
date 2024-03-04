@@ -37,7 +37,7 @@ func NewOrderHandler(gRouter *gin.RouterGroup, interactor *controller.OrderContr
 // @Tags Order Routes
 // @Accept  json
 // @Produce  json
-// @Success 200 {array} domain.Order{}
+// @Success 200 {array} entity.Order{}
 // @Router /api/v1/order [get]
 func (handler *orderHandler) FindAllHandler(c *gin.Context) {
 	orders, err := handler.interactor.FindAll()
@@ -57,7 +57,7 @@ func (handler *orderHandler) FindAllHandler(c *gin.Context) {
 // @Param        id   path      string  true  "Order ID"
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} domain.Order{}
+// @Success 200 {object} entity.Order{}
 // @Router /api/v1/order/{id} [get]
 func (handler *orderHandler) FindByIdHandler(c *gin.Context) {
 	orderId, exists := c.Params.Get("id")
@@ -86,7 +86,7 @@ func (handler *orderHandler) FindByIdHandler(c *gin.Context) {
 // @Param        status   path      string  true  "STARTED, WAITING_PAYMENT, PAYMENT_RECEIVED, RECEIVED, PREPARING, READY or COMPLETED"
 // @Accept  json
 // @Produce  json
-// @Success 200 {array} domain.Order{}
+// @Success 200 {array} entity.Order{}
 // @Router /api/v1/order/status/{status} [get]
 func (handler *orderHandler) GetAllByStatusHandler(c *gin.Context) {
 	status, exists := c.Params.Get("status")
@@ -116,7 +116,7 @@ func (handler *orderHandler) GetAllByStatusHandler(c *gin.Context) {
 // @Summary Create new order
 // @Description Create new order
 // @Tags Order Routes
-// @Param        data   body      order.OrderCreateDTO  true  "Order information and customer CPF"
+// @Param        data   body      dto.OrderCreateDTO  true  "Order information and customer CPF"
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} interface{}
@@ -153,7 +153,7 @@ func (handler *orderHandler) CreateOrderHandler(c *gin.Context) {
 // @Summary Update order
 // @Description Update order
 // @Tags Order Routes
-// @Param        data   body      order.OrderUpdateDTO  true  "Order information and customer CPF"
+// @Param        data   body      dto.OrderUpdateDTO  true  "Order information and customer CPF"
 // @Accept  json
 // @Produce  json
 // @Success 204
