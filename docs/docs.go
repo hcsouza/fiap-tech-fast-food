@@ -41,7 +41,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_checkout.CreateCheckout"
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_common_dto.CreateCheckout"
                         }
                     }
                 }
@@ -74,7 +74,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_checkout.UpdateCheckoutDTO"
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_common_dto.UpdateCheckoutDTO"
                         }
                     }
                 ],
@@ -116,7 +116,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer"
+                                "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Customer"
                             }
                         }
                     }
@@ -141,7 +141,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_customer.CustomerCreateDTO"
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_common_dto.CustomerCreateDTO"
                         }
                     }
                 ],
@@ -149,7 +149,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer"
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Customer"
                         }
                     }
                 }
@@ -174,7 +174,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Order"
+                                "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Order"
                             }
                         }
                     }
@@ -199,7 +199,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderCreateDTO"
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_common_dto.OrderCreateDTO"
                         }
                     }
                 ],
@@ -229,7 +229,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "STARTED, WAITING_PAYMENT, PAYMENT_RECEIVED, RECEIVED, PREPARING, READY or COMPLETED",
+                        "description": "STARTED, PAYMENT_PENDING, PAYMENT_APPROVED, PAYMENT_REFUSED, PREPARING, READY or COMPLETED",
                         "name": "status",
                         "in": "path",
                         "required": true
@@ -241,7 +241,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Order"
+                                "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Order"
                             }
                         }
                     }
@@ -274,7 +274,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Order"
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Order"
                         }
                     }
                 }
@@ -298,7 +298,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderUpdateDTO"
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_common_dto.OrderUpdateDTO"
                         }
                     }
                 ],
@@ -332,7 +332,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "STARTED, RECEIVED, PREPARING, READY or COMPLETED",
+                        "description": "STARTED, PREPARING, READY or COMPLETED",
                         "name": "status",
                         "in": "path",
                         "required": true
@@ -364,7 +364,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Product"
+                                "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Product"
                             }
                         }
                     }
@@ -389,7 +389,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.ProductDTO"
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Product"
                         }
                     }
                 ],
@@ -428,7 +428,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Product"
+                                "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Product"
                             }
                         }
                     }
@@ -462,7 +462,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.ProductDTO"
+                            "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Product"
                         }
                     }
                 ],
@@ -548,92 +548,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer": {
-            "type": "object",
-            "properties": {
-                "cpf": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Order": {
-            "type": "object",
-            "properties": {
-                "_id": {
-                    "type": "string"
-                },
-                "amount": {
-                    "type": "number"
-                },
-                "createdAt": {
-                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_customTime.CustomTime"
-                },
-                "customer": {
-                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer"
-                },
-                "orderItems": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.OrderItem"
-                    }
-                },
-                "orderStatus": {
-                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_orderStatus.OrderStatus"
-                },
-                "updatedAt": {
-                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_customTime.CustomTime"
-                }
-            }
-        },
-        "github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.OrderItem": {
-            "type": "object",
-            "properties": {
-                "product": {
-                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Product"
-                },
-                "quantity": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Product": {
-            "type": "object",
-            "properties": {
-                "_id": {
-                    "type": "string"
-                },
-                "category": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "number"
-                }
-            }
-        },
-        "github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.ProductDTO": {
-            "type": "object",
-            "properties": {
-                "category": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "number"
-                }
-            }
-        },
-        "github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_checkout.CreateCheckout": {
+        "github_com_hcsouza_fiap-tech-fast-food_src_common_dto.CreateCheckout": {
             "type": "object",
             "properties": {
                 "checkout_url": {
@@ -644,15 +559,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_checkout.UpdateCheckoutDTO": {
-            "type": "object",
-            "properties": {
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_customer.CustomerCreateDTO": {
+        "github_com_hcsouza_fiap-tech-fast-food_src_common_dto.CustomerCreateDTO": {
             "type": "object",
             "required": [
                 "cpf",
@@ -670,7 +577,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderCreateDTO": {
+        "github_com_hcsouza_fiap-tech-fast-food_src_common_dto.OrderCreateDTO": {
             "type": "object",
             "properties": {
                 "customer": {
@@ -679,12 +586,12 @@ const docTemplate = `{
                 "orderItems": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderItemDTO"
+                        "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_common_dto.OrderItemDTO"
                     }
                 }
             }
         },
-        "github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderItemDTO": {
+        "github_com_hcsouza_fiap-tech-fast-food_src_common_dto.OrderItemDTO": {
             "type": "object",
             "properties": {
                 "product": {
@@ -695,7 +602,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderUpdateDTO": {
+        "github_com_hcsouza_fiap-tech-fast-food_src_common_dto.OrderUpdateDTO": {
             "type": "object",
             "properties": {
                 "customer": {
@@ -704,12 +611,91 @@ const docTemplate = `{
                 "orderItems": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderItemDTO"
+                        "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_common_dto.OrderItemDTO"
                     }
                 }
             }
         },
-        "github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_customTime.CustomTime": {
+        "github_com_hcsouza_fiap-tech-fast-food_src_common_dto.UpdateCheckoutDTO": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Customer": {
+            "type": "object",
+            "properties": {
+                "cpf": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Order": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "amount": {
+                    "type": "number"
+                },
+                "createdAt": {
+                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_valueObject.CustomTime"
+                },
+                "customer": {
+                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Customer"
+                },
+                "orderItems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.OrderItem"
+                    }
+                },
+                "orderStatus": {
+                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_valueObject.OrderStatus"
+                },
+                "updatedAt": {
+                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_valueObject.CustomTime"
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_src_core_entity.OrderItem": {
+            "type": "object",
+            "properties": {
+                "product": {
+                    "$ref": "#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Product"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Product": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                }
+            }
+        },
+        "github_com_hcsouza_fiap-tech-fast-food_src_core_valueObject.CustomTime": {
             "type": "object",
             "properties": {
                 "time.Time": {
@@ -717,7 +703,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_orderStatus.OrderStatus": {
+        "github_com_hcsouza_fiap-tech-fast-food_src_core_valueObject.OrderStatus": {
             "type": "string",
             "enum": [
                 "STARTED",

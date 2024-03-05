@@ -83,7 +83,7 @@ func (handler *orderHandler) FindByIdHandler(c *gin.Context) {
 // @Summary Get all orders by status
 // @Description Get all orders by status
 // @Tags Order Routes
-// @Param        status   path      string  true  "STARTED, WAITING_PAYMENT, PAYMENT_RECEIVED, RECEIVED, PREPARING, READY or COMPLETED"
+// @Param        status   path      string  true  "STARTED, PAYMENT_PENDING, PAYMENT_APPROVED, PAYMENT_REFUSED, PREPARING, READY or COMPLETED"
 // @Accept  json
 // @Produce  json
 // @Success 200 {array} entity.Order{}
@@ -202,7 +202,7 @@ func (handler *orderHandler) UpdateOrderHandler(c *gin.Context) {
 // @Description Update order status
 // @Tags Order Routes
 // @Param        id   path      string  true  "Order ID"
-// @Param        status   path      string  true  "STARTED, RECEIVED, PREPARING, READY or COMPLETED"
+// @Param        status   path      string  true  "STARTED, PREPARING, READY or COMPLETED"
 // @Accept  json
 // @Produce  json
 // @Success 204
