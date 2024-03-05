@@ -5,18 +5,18 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/hcsouza/fiap-tech-fast-food/src/common/interfaces"
 	"github.com/hcsouza/fiap-tech-fast-food/src/core/entity"
 	valueobject "github.com/hcsouza/fiap-tech-fast-food/src/core/valueObject"
-	"github.com/hcsouza/fiap-tech-fast-food/src/operation/controller"
 )
 
 type productHandler struct {
-	interactor controller.ProductController
+	interactor interfaces.ProductController
 }
 
-func NewProductHandler(gRouter *gin.RouterGroup, interactor *controller.ProductController) {
+func NewProductHandler(gRouter *gin.RouterGroup, interactor interfaces.ProductController) {
 	handler := &productHandler{
-		interactor: *interactor,
+		interactor: interactor,
 	}
 
 	gRouter.GET("/product", handler.GetAllProductsHandler)

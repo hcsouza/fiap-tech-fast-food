@@ -9,18 +9,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/hcsouza/fiap-tech-fast-food/src/common/dto"
+	"github.com/hcsouza/fiap-tech-fast-food/src/common/interfaces"
 	"github.com/hcsouza/fiap-tech-fast-food/src/core/entity"
 	orderStatus "github.com/hcsouza/fiap-tech-fast-food/src/core/valueObject"
-	"github.com/hcsouza/fiap-tech-fast-food/src/operation/controller"
 )
 
 type orderHandler struct {
-	interactor controller.OrderController
+	interactor interfaces.OrderController
 }
 
-func NewOrderHandler(gRouter *gin.RouterGroup, interactor *controller.OrderController) {
+func NewOrderHandler(gRouter *gin.RouterGroup, interactor interfaces.OrderController) {
 	handler := &orderHandler{
-		interactor: *interactor,
+		interactor: interactor,
 	}
 
 	gRouter.GET("/order", handler.FindAllHandler)

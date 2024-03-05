@@ -14,7 +14,7 @@ type CustomerController struct {
 	useCase interfaces.CustomerUseCase
 }
 
-func NewCustomerController(datasource interfaces.DatabaseSource) *CustomerController {
+func NewCustomerController(datasource interfaces.DatabaseSource) interfaces.CustomerController {
 	gateway := gateway.NewCustomerGateway(datasource)
 	return &CustomerController{
 		useCase: usecase.NewCustomerUseCase(gateway),

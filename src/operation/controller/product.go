@@ -12,7 +12,7 @@ type ProductController struct {
 	useCase interfaces.ProductUseCase
 }
 
-func NewProductController(datasource interfaces.DatabaseSource) *ProductController {
+func NewProductController(datasource interfaces.DatabaseSource) interfaces.ProductController {
 	gateway := gateway.NewProductGateway(datasource)
 	return &ProductController{
 		useCase: usecase.NewProductUseCase(gateway),

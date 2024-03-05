@@ -10,17 +10,17 @@ import (
 
 	"github.com/hcsouza/fiap-tech-fast-food/src/common/dto"
 	coreErrors "github.com/hcsouza/fiap-tech-fast-food/src/common/errors"
+	"github.com/hcsouza/fiap-tech-fast-food/src/common/interfaces"
 	vo "github.com/hcsouza/fiap-tech-fast-food/src/core/valueObject"
-	"github.com/hcsouza/fiap-tech-fast-food/src/operation/controller"
 )
 
 type checkoutHandler struct {
-	interactor controller.CheckoutController
+	interactor interfaces.CheckoutController
 }
 
-func NewCheckoutHandler(gRouter *gin.RouterGroup, interactor *controller.CheckoutController) {
+func NewCheckoutHandler(gRouter *gin.RouterGroup, interactor interfaces.CheckoutController) {
 	handler := &checkoutHandler{
-		interactor: *interactor,
+		interactor: interactor,
 	}
 
 	gRouter.POST("/checkout/:id", handler.CreateCheckout)

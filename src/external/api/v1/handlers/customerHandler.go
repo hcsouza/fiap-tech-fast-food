@@ -12,13 +12,13 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/hcsouza/fiap-tech-fast-food/src/common/dto"
 	coreErrors "github.com/hcsouza/fiap-tech-fast-food/src/common/errors"
+	"github.com/hcsouza/fiap-tech-fast-food/src/common/interfaces"
 	"github.com/hcsouza/fiap-tech-fast-food/src/core/entity"
 	vo "github.com/hcsouza/fiap-tech-fast-food/src/core/valueObject"
-	"github.com/hcsouza/fiap-tech-fast-food/src/operation/controller"
 )
 
 type customerHandler struct {
-	interactor controller.CustomerController
+	interactor interfaces.CustomerController
 }
 
 const (
@@ -31,9 +31,9 @@ func init() {
 	}
 }
 
-func NewCustomerHandler(gRouter *gin.RouterGroup, interactor *controller.CustomerController) {
+func NewCustomerHandler(gRouter *gin.RouterGroup, interactor interfaces.CustomerController) {
 	handler := &customerHandler{
-		interactor: *interactor,
+		interactor: interactor,
 	}
 
 	gRouter.GET("/customer", handler.GetCustomerHandler)
