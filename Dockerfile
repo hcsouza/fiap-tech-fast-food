@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY cmd ./cmd
 COPY src ./src
-COPY test ./test
 
 COPY go.mod go.sum ./
 
