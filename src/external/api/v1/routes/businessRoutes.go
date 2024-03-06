@@ -31,7 +31,7 @@ func registerCustomerHandler(groupServer *gin.RouterGroup, dbClient mongo.Client
 	)
 
 	customerInteractor := controller.NewCustomerController(mongoAdapter)
-	handlers.NewCustomerHandler(groupServer, customerInteractor)
+	handlers.NewCustomerHandler(groupServer, &customerInteractor)
 }
 
 func registerProductHandler(groupServer *gin.RouterGroup, dbClient mongo.Client) {
@@ -42,7 +42,7 @@ func registerProductHandler(groupServer *gin.RouterGroup, dbClient mongo.Client)
 	)
 
 	productInteractor := controller.NewProductController(mongoAdapter)
-	handlers.NewProductHandler(groupServer, productInteractor)
+	handlers.NewProductHandler(groupServer, &productInteractor)
 }
 
 func registerOrderHandler(groupServer *gin.RouterGroup, dbClient mongo.Client) {
@@ -70,7 +70,7 @@ func registerOrderHandler(groupServer *gin.RouterGroup, dbClient mongo.Client) {
 
 	orderInteractor := controller.NewOrderController(orderDbAdapter, productUseCase, customerUseCase)
 
-	handlers.NewOrderHandler(groupServer, orderInteractor)
+	handlers.NewOrderHandler(groupServer, &orderInteractor)
 }
 
 func registerCheckoutHandler(groupServer *gin.RouterGroup, dbClient mongo.Client) {
@@ -101,5 +101,5 @@ func registerCheckoutHandler(groupServer *gin.RouterGroup, dbClient mongo.Client
 
 	checkoutInteractor := controller.NewCheckoutController(orderUseCase)
 
-	handlers.NewCheckoutHandler(groupServer, checkoutInteractor)
+	handlers.NewCheckoutHandler(groupServer, &checkoutInteractor)
 }

@@ -9,3 +9,8 @@ type CheckoutUseCase interface {
 	CreateCheckout(orderId string) (*dto.CreateCheckout, error)
 	UpdateCheckout(orderId string, status valueobject.OrderStatus) error
 }
+
+type CheckoutController interface {
+	CreateCheckout(orderId string) (*dto.CreateCheckout, error)
+	UpdateCheckout(orderId string, status valueobject.OrderStatus) error
+}

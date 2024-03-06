@@ -11,7 +11,7 @@ type CheckoutController struct {
 	useCase interfaces.CheckoutUseCase
 }
 
-func NewCheckoutController(orderUseCase interfaces.OrderUseCase) *CheckoutController {
+func NewCheckoutController(orderUseCase interfaces.OrderUseCase) interfaces.CheckoutController {
 	return &CheckoutController{
 		useCase: usecase.NewCheckoutUseCase(orderUseCase),
 	}
