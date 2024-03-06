@@ -1,73 +1,13 @@
 basePath: /
 definitions:
-  github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer:
-    properties:
-      cpf:
-        type: string
-      email:
-        type: string
-      name:
-        type: string
-    type: object
-  github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Order:
-    properties:
-      _id:
-        type: string
-      amount:
-        type: number
-      createdAt:
-        $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_customTime.CustomTime'
-      customer:
-        $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer'
-      orderItems:
-        items:
-          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.OrderItem'
-        type: array
-      orderStatus:
-        $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_orderStatus.OrderStatus'
-      updatedAt:
-        $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_customTime.CustomTime'
-    type: object
-  github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.OrderItem:
-    properties:
-      product:
-        $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Product'
-      quantity:
-        type: integer
-    type: object
-  github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Product:
-    properties:
-      _id:
-        type: string
-      category:
-        type: string
-      name:
-        type: string
-      price:
-        type: number
-    type: object
-  github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.ProductDTO:
-    properties:
-      category:
-        type: string
-      name:
-        type: string
-      price:
-        type: number
-    type: object
-  github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_checkout.CreateCheckout:
+  github_com_hcsouza_fiap-tech-fast-food_src_common_dto.CreateCheckout:
     properties:
       checkout_url:
         type: string
       message:
         type: string
     type: object
-  github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_checkout.UpdateCheckoutDTO:
-    properties:
-      status:
-        type: string
-    type: object
-  github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_customer.CustomerCreateDTO:
+  github_com_hcsouza_fiap-tech-fast-food_src_common_dto.CustomerCreateDTO:
     properties:
       cpf:
         type: string
@@ -79,37 +19,88 @@ definitions:
     - cpf
     - email
     type: object
-  github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderCreateDTO:
+  github_com_hcsouza_fiap-tech-fast-food_src_common_dto.OrderCreateDTO:
     properties:
       customer:
         type: string
       orderItems:
         items:
-          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderItemDTO'
+          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_common_dto.OrderItemDTO'
         type: array
     type: object
-  github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderItemDTO:
+  github_com_hcsouza_fiap-tech-fast-food_src_common_dto.OrderItemDTO:
     properties:
       product:
         type: string
       quantity:
         type: integer
     type: object
-  github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderUpdateDTO:
+  github_com_hcsouza_fiap-tech-fast-food_src_common_dto.OrderUpdateDTO:
     properties:
       customer:
         type: string
       orderItems:
         items:
-          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderItemDTO'
+          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_common_dto.OrderItemDTO'
         type: array
     type: object
-  github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_customTime.CustomTime:
+  github_com_hcsouza_fiap-tech-fast-food_src_common_dto.UpdateCheckoutDTO:
+    properties:
+      status:
+        type: string
+    type: object
+  github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Customer:
+    properties:
+      cpf:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+    type: object
+  github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Order:
+    properties:
+      _id:
+        type: string
+      amount:
+        type: number
+      createdAt:
+        $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_valueObject.CustomTime'
+      customer:
+        $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Customer'
+      orderItems:
+        items:
+          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.OrderItem'
+        type: array
+      orderStatus:
+        $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_valueObject.OrderStatus'
+      updatedAt:
+        $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_valueObject.CustomTime'
+    type: object
+  github_com_hcsouza_fiap-tech-fast-food_src_core_entity.OrderItem:
+    properties:
+      product:
+        $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Product'
+      quantity:
+        type: integer
+    type: object
+  github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Product:
+    properties:
+      _id:
+        type: string
+      category:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  github_com_hcsouza_fiap-tech-fast-food_src_core_valueObject.CustomTime:
     properties:
       time.Time:
         type: string
     type: object
-  github_com_hcsouza_fiap-tech-fast-food_internal_core_valueObject_orderStatus.OrderStatus:
+  github_com_hcsouza_fiap-tech-fast-food_src_core_valueObject.OrderStatus:
     enum:
     - STARTED
     - PAYMENT_PENDING
@@ -151,7 +142,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_checkout.CreateCheckout'
+            $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_common_dto.CreateCheckout'
       summary: Create checkout from order
       tags:
       - Checkout Routes
@@ -171,7 +162,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_checkout.UpdateCheckoutDTO'
+          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_common_dto.UpdateCheckoutDTO'
       produces:
       - application/json
       responses:
@@ -200,7 +191,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer'
+              $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Customer'
             type: array
       summary: Get customer by CPF
       tags:
@@ -215,14 +206,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_customer.CustomerCreateDTO'
+          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_common_dto.CustomerCreateDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Customer'
+            $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Customer'
       summary: Create a new customer
       tags:
       - Customer Routes
@@ -238,7 +229,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Order'
+              $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Order'
             type: array
       summary: Get all orders
       tags:
@@ -253,7 +244,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderCreateDTO'
+          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_common_dto.OrderCreateDTO'
       produces:
       - application/json
       responses:
@@ -281,7 +272,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Order'
+            $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Order'
       summary: Get order by ID
       tags:
       - Order Routes
@@ -295,7 +286,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_useCases_order.OrderUpdateDTO'
+          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_common_dto.OrderUpdateDTO'
       produces:
       - application/json
       responses:
@@ -315,7 +306,7 @@ paths:
         name: id
         required: true
         type: string
-      - description: STARTED, RECEIVED, PREPARING, READY or COMPLETED
+      - description: STARTED, PREPARING, READY or COMPLETED
         in: path
         name: status
         required: true
@@ -334,8 +325,8 @@ paths:
       - application/json
       description: Get all orders by status
       parameters:
-      - description: STARTED, WAITING_PAYMENT, PAYMENT_RECEIVED, RECEIVED, PREPARING,
-          READY or COMPLETED
+      - description: STARTED, PAYMENT_PENDING, PAYMENT_APPROVED, PAYMENT_REFUSED,
+          PREPARING, READY or COMPLETED
         in: path
         name: status
         required: true
@@ -347,7 +338,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Order'
+              $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Order'
             type: array
       summary: Get all orders by status
       tags:
@@ -364,7 +355,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Product'
+              $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Product'
             type: array
       summary: Get all products
       tags:
@@ -379,7 +370,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.ProductDTO'
+          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Product'
       produces:
       - application/json
       responses:
@@ -406,7 +397,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.Product'
+              $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Product'
             type: array
       summary: Get all products by category
       tags:
@@ -445,7 +436,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_internal_core_domain.ProductDTO'
+          $ref: '#/definitions/github_com_hcsouza_fiap-tech-fast-food_src_core_entity.Product'
       produces:
       - application/json
       responses:

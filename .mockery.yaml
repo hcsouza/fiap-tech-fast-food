@@ -5,12 +5,17 @@ mockname: "{{.InterfaceName}}"
 filename: "{{.InterfaceName | lower}}_mock.go"
 outpkg: mocks
 packages:
-  github.com/hcsouza/fiap-tech-fast-food/internal/core/repository:
+  github.com/hcsouza/fiap-tech-fast-food/src/common/interfaces:
     config:
       dir: "test/mocks"
       mockname: "Mock{{.InterfaceName}}"
     interfaces:
-      CustomerRepository:
-      IDatabaseAdapter:
-      ProductRepository:
-      OrderRepository:
+      CustomerGateway:
+      CustomerUseCase:
+      CheckoutUseCase:
+      DataSource:
+      OrderGateway:
+      OrderUseCase:
+      ProductGateway:
+      ProductUseCase:
+
