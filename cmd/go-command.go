@@ -6,9 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/hcsouza/fiap-tech-fast-food/cmd/configuration"
 	_ "github.com/hcsouza/fiap-tech-fast-food/docs"
-	"github.com/hcsouza/fiap-tech-fast-food/internal/adapter/driver/api"
+	"github.com/hcsouza/fiap-tech-fast-food/src/external/api"
+	"github.com/hcsouza/fiap-tech-fast-food/src/external/api/infra/config"
 )
 
 // @title Fast Food API
@@ -19,7 +19,7 @@ import (
 // @BasePath /
 func main() {
 
-	mongoClient, err := configuration.InitMongoDbConfiguration(context.TODO())
+	mongoClient, err := config.InitMongoDbConfiguration(context.TODO())
 	if err != nil {
 		log.Fatal("error on create mongoConnection")
 	}
