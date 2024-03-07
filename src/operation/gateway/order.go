@@ -3,6 +3,7 @@ package gateway
 import (
 	"fmt"
 
+	"github.com/hcsouza/fiap-tech-fast-food/src/common/dto"
 	"github.com/hcsouza/fiap-tech-fast-food/src/common/interfaces"
 	"github.com/hcsouza/fiap-tech-fast-food/src/core/entity"
 	valueobject "github.com/hcsouza/fiap-tech-fast-food/src/core/valueObject"
@@ -65,7 +66,7 @@ func (og *orderGateway) FindAllByStatus(status valueobject.OrderStatus) ([]entit
 
 func (og *orderGateway) Save(order *entity.Order) (string, error) {
 	insertResult, err := og.datasource.Save(
-		order.ToSaveMongo(),
+		dto.OrderEntityToSaveRecordDTO(order),
 	)
 
 	if err != nil {
@@ -81,7 +82,8 @@ func (og *orderGateway) Save(order *entity.Order) (string, error) {
 func (og *orderGateway) Update(order *entity.Order) error {
 	_, err := og.datasource.Update(
 		order.ID,
-		order.ToUpdateMongo())
+		dto.OrderEntityToUpdateRecordDTO(order),
+	)
 
 	if err != nil {
 		return err

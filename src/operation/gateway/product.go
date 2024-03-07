@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"github.com/hcsouza/fiap-tech-fast-food/src/common/dto"
 	"github.com/hcsouza/fiap-tech-fast-food/src/common/interfaces"
 	"github.com/hcsouza/fiap-tech-fast-food/src/core/entity"
 	valueobject "github.com/hcsouza/fiap-tech-fast-food/src/core/valueObject"
@@ -64,7 +65,7 @@ func (pg *productGateway) FindById(id string) (*entity.Product, error) {
 
 func (pg *productGateway) Save(product *entity.Product) error {
 	_, err := pg.datasource.Save(
-		product.ToSaveMongo(),
+		dto.ProductEntityToSaveRecordDTO(product),
 	)
 
 	if err != nil {
@@ -77,7 +78,7 @@ func (pg *productGateway) Save(product *entity.Product) error {
 func (pg *productGateway) Update(product *entity.Product) error {
 	_, err := pg.datasource.Update(
 		product.ID,
-		product.ToUpdateMongo(),
+		dto.ProductEntityToUpdateRecordDTO(product),
 	)
 
 	if err != nil {
