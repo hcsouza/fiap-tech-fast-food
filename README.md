@@ -25,13 +25,8 @@ this command will generate an image with this tag: *fiap-tech-fast-food*
 If you want run this image locally you can use this command: 
 
 ```sh
-docker run -v /host/configs.yaml:/app/data/configs/config.yaml -p 8080:8080 -it fiap-tech-fast-food
+docker run -e MONGODB_HOST=localhost -e MONGODB_PORT=27017 -e MONGODB_DATABASE=db -e API_PORT=8080 -p 8080:8080 -it fiap-tech-fast-food
 ```
-
-An sample of configs.yaml could be found on: 
-
-`internal/adapter/infra/config/configs.yaml.sample`
-
 
 * ***Generate docs***
 

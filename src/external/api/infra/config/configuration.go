@@ -44,8 +44,8 @@ func GetApiCfg() Api {
 }
 
 func setupConfig() *Config {
-
 	runOnce.Do(func() {
+		var appConfig Config
 		root, _ := find.Repo()
 		configFilePath := path.Join(root.Path, "/src/external/api/infra/config")
 
@@ -56,16 +56,34 @@ func setupConfig() *Config {
 		viper.AddConfigPath(configFilePath)
 		viper.AddConfigPath("/app/data/configs")
 		err := viper.ReadInConfig()
-		if err != nil {
-			panic(fmt.Errorf("erro fatal no arquivo de configuração: %w", err))
+
+		if err != nil && !allConfigsAreSet() {
+			panic(fmt.Errorf("Falha ao carregar as configurações: %w \n", err))
 		}
 
-		var appConfig Config
-		err = viper.Unmarshal(&appConfig)
-		if err != nil {
-			panic(err)
+		if err == nil {
+			err := viper.Unmarshal(&appConfig)
+			if err != nil {
+				panic(err)
+			}
 		}
+
+		if allConfigsAreSet() { // load envs from infra
+			appConfig.ApiCfg.Port = viper.Get("api.port").(string)
+			appConfig.MongoCfg.Host = viper.Get("mongodb.host").(string)
+			appConfig.MongoCfg.Port = viper.Get("mongodb.port").(string)
+			appConfig.MongoCfg.Database = viper.Get("mongodb.database").(string)
+		}
+
 		config = &appConfig
 	})
+
 	return config
+}
+
+func allConfigsAreSet() bool {
+	return viper.Get("mongodb.host") != nil &&
+		viper.Get("mongodb.port") != nil &&
+		viper.Get("mongodb.database") != nil &&
+		viper.Get("api.port") != nil
 }

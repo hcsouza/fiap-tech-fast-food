@@ -9,28 +9,28 @@ import (
 
 func TestCategory(t *testing.T) {
 	t.Run("should return true when category is Lanche", func(t *testing.T) {
-		category := vo.Category("Lanche")
+		isValid := vo.Category("Lanche").IsValid()
 
-		assert.True(t, category.IsValid())
+		assert.True(t, isValid)
 	})
 	t.Run("should return true when category is Bebida", func(t *testing.T) {
-		category := vo.Category("Bebida")
+		isValid := vo.Category("Bebida").IsValid()
 
-		assert.True(t, category.IsValid())
+		assert.True(t, isValid)
 	})
 	t.Run("should return true when category is Acompanhamento", func(t *testing.T) {
-		category := vo.Category("Acompanhamento")
+		isValid := vo.Category("Acompanhamento").IsValid()
 
-		assert.True(t, category.IsValid())
+		assert.True(t, isValid)
 	})
 	t.Run("should return true when category is Sobremesa", func(t *testing.T) {
-		category := vo.Category("Sobremesa")
+		isValid := vo.Category("Sobremesa").IsValid()
 
-		assert.True(t, category.IsValid())
+		assert.True(t, isValid)
 	})
 	t.Run("should return false when category is unkown", func(t *testing.T) {
-		category := vo.Category("Não mapeada")
+		isValid := vo.Category("Não mapeada").IsValid()
 
-		assert.False(t, category.IsValid())
+		assert.False(t, isValid)
 	})
 }

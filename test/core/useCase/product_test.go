@@ -22,13 +22,13 @@ func TestProductUseCase(t *testing.T) {
 				ID:       "found",
 				Name:     "x-salada",
 				Price:    10.0,
-				Category: Category("lanche"),
+				Category: "lanche",
 			},
 			{
 				ID:       "foundb",
 				Name:     "coca-cola",
 				Price:    5.0,
-				Category: Category("bebida"),
+				Category: "bebida",
 			},
 		}
 
@@ -55,7 +55,7 @@ func TestProductUseCase(t *testing.T) {
 				ID:       "found",
 				Name:     "x-salada",
 				Price:    10.0,
-				Category: Category("lanche"),
+				Category: "lanche",
 			},
 		}
 
@@ -74,7 +74,7 @@ func TestProductUseCase(t *testing.T) {
 		newProduct := &entity.Product{
 			Name:     "x-salada",
 			Price:    10.0,
-			Category: Category("lanche"),
+			Category: "lanche",
 		}
 
 		productGatewayMock = mocks.NewMockProductGateway(t)
@@ -91,7 +91,7 @@ func TestProductUseCase(t *testing.T) {
 			ID:       "found",
 			Name:     "x-salada",
 			Price:    10.0,
-			Category: Category("lanche"),
+			Category: "lanche",
 		}
 
 		productGatewayMock = mocks.NewMockProductGateway(t)

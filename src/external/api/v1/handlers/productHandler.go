@@ -55,14 +55,15 @@ func (handler *productHandler) GetAllProductsHandler(c *gin.Context) {
 // @Success 200 {array} entity.Product{}
 // @Router /api/v1/product/{category} [get]
 func (handler *productHandler) GetProductByCategoryHandler(c *gin.Context) {
-	category, exists := c.Params.Get("category")
+	supposedCategory, exists := c.Params.Get("category")
+	category := valueobject.Category(supposedCategory)
 
 	if !exists {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "category is required"})
 		return
 	}
 
-	if category == "" || !valueobject.Category(category).IsValid() {
+	if !valueobject.Category(category).IsValid() {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid category"})
 		return
 	}
@@ -93,7 +94,9 @@ func (handler *productHandler) CreateProductHandler(c *gin.Context) {
 		return
 	}
 
-	if !product.IsValidCategory() {
+	category := valueobject.Category(product.Category)
+
+	if !valueobject.Category(category).IsValid() {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid category"})
 		return
 	}
@@ -142,7 +145,9 @@ func (handler *productHandler) UpdateProductHandler(c *gin.Context) {
 		return
 	}
 
-	if !product.IsValidCategory() {
+	category := valueobject.Category(product.Category)
+
+	if !valueobject.Category(category).IsValid() {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid category"})
 		return
 	}
