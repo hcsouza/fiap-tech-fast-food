@@ -1,9 +1,6 @@
 package entity
 
 import (
-	"time"
-
-	"github.com/google/uuid"
 	valueobject "github.com/hcsouza/fiap-tech-fast-food/src/core/valueObject"
 )
 
@@ -20,28 +17,4 @@ type Order struct {
 type OrderItem struct {
 	Product  Product `json:"product"`
 	Quantity int     `json:"quantity"`
-}
-
-func (o *Order) ToSaveMongo() map[string]interface{} {
-	return map[string]interface{}{
-		"_id":         uuid.New().String(),
-		"customer":    o.Customer,
-		"orderStatus": o.OrderStatus,
-		"orderItems":  o.OrderItems,
-		"amount":      o.Amount,
-		"createdAt":   valueobject.CustomTime{Time: time.Now()},
-	}
-}
-
-func (o *Order) ToUpdateMongo() map[string]interface{} {
-	return map[string]interface{}{
-		"orderStatus": o.OrderStatus,
-		"orderItems":  o.OrderItems,
-		"amount":      o.Amount,
-		"updatedAt":   valueobject.CustomTime{Time: time.Now()},
-	}
-}
-
-func (o Order) CollectionName() string {
-	return "order"
 }

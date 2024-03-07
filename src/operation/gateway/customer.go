@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"github.com/hcsouza/fiap-tech-fast-food/src/common/dto"
 	"github.com/hcsouza/fiap-tech-fast-food/src/common/interfaces"
 	"github.com/hcsouza/fiap-tech-fast-food/src/core/entity"
 	valueobject "github.com/hcsouza/fiap-tech-fast-food/src/core/valueObject"
@@ -36,7 +37,7 @@ func (cg *customerGateway) Find(cpf valueobject.CPF) (*entity.Customer, error) {
 
 func (cg *customerGateway) Save(customer *entity.Customer) error {
 	_, err := cg.datasource.Save(
-		customer.ToMongo(),
+		dto.CustomerEntityToSaveRecordDTO(customer),
 	)
 
 	if err != nil {

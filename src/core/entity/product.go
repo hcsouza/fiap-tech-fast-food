@@ -38,24 +38,3 @@ func (p *Product) Normalize() *Product {
 		Category: valueobject.Category(strings.ToLower(string(p.Category))),
 	}
 }
-
-func (p *Product) ToSaveMongo() map[string]interface{} {
-	return map[string]interface{}{
-		"_id":      uuid.New().String(),
-		"name":     p.Name,
-		"price":    p.Price,
-		"category": p.Category,
-	}
-}
-
-func (p *Product) ToUpdateMongo() map[string]interface{} {
-	return map[string]interface{}{
-		"name":     p.Name,
-		"price":    p.Price,
-		"category": p.Category,
-	}
-}
-
-func (p Product) CollectionName() string {
-	return "product"
-}
