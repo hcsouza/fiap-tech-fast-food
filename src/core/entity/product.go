@@ -55,7 +55,3 @@ func (p *Product) ToUpdateMongo() map[string]interface{} {
 		"category": p.Category,
 	}
 }
-
-func (p Product) CollectionName() string {
-	return "product"
-}

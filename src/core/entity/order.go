@@ -41,7 +41,3 @@ func (o *Order) ToUpdateMongo() map[string]interface{} {
 		"updatedAt":   valueobject.CustomTime{Time: time.Now()},
 	}
 }
-
-func (o Order) CollectionName() string {
-	return "order"
-}

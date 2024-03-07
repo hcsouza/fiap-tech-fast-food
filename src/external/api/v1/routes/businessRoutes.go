@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 
+	"github.com/hcsouza/fiap-tech-fast-food/src/common/constants"
 	"github.com/hcsouza/fiap-tech-fast-food/src/core/entity"
 	"github.com/hcsouza/fiap-tech-fast-food/src/core/usecase"
 	"github.com/hcsouza/fiap-tech-fast-food/src/external/api/infra/config"
@@ -27,7 +28,7 @@ func registerCustomerHandler(groupServer *gin.RouterGroup, dbClient mongo.Client
 	mongoAdapter := mongodb.NewMongoAdapter[entity.Customer](
 		dbClient,
 		config.GetMongoCfg().Database,
-		entity.Customer{}.CollectionName(),
+		constants.CustomerCollection,
 	)
 
 	customerInteractor := controller.NewCustomerController(mongoAdapter)
@@ -38,7 +39,7 @@ func registerProductHandler(groupServer *gin.RouterGroup, dbClient mongo.Client)
 	mongoAdapter := mongodb.NewMongoAdapter[entity.Product](
 		dbClient,
 		config.GetMongoCfg().Database,
-		entity.Product{}.CollectionName(),
+		constants.ProductCollection,
 	)
 
 	productInteractor := controller.NewProductController(mongoAdapter)
@@ -49,13 +50,13 @@ func registerOrderHandler(groupServer *gin.RouterGroup, dbClient mongo.Client) {
 	orderDbAdapter := mongodb.NewMongoAdapter[entity.Order](
 		dbClient,
 		config.GetMongoCfg().Database,
-		entity.Order{}.CollectionName(),
+		constants.OrderCollection,
 	)
 
 	productDbAdapter := mongodb.NewMongoAdapter[entity.Product](
 		dbClient,
 		config.GetMongoCfg().Database,
-		entity.Product{}.CollectionName(),
+		constants.ProductCollection,
 	)
 	productGateway := gateway.NewProductGateway(productDbAdapter)
 	productUseCase := usecase.NewProductUseCase(productGateway)
@@ -63,7 +64,7 @@ func registerOrderHandler(groupServer *gin.RouterGroup, dbClient mongo.Client) {
 	customerDbAdapter := mongodb.NewMongoAdapter[entity.Customer](
 		dbClient,
 		config.GetMongoCfg().Database,
-		entity.Customer{}.CollectionName(),
+		constants.CustomerCollection,
 	)
 	customerGateway := gateway.NewCustomerGateway(customerDbAdapter)
 	customerUseCase := usecase.NewCustomerUseCase(customerGateway)
@@ -78,7 +79,7 @@ func registerCheckoutHandler(groupServer *gin.RouterGroup, dbClient mongo.Client
 	productDbAdapter := mongodb.NewMongoAdapter[entity.Product](
 		dbClient,
 		config.GetMongoCfg().Database,
-		entity.Product{}.CollectionName(),
+		constants.ProductCollection,
 	)
 	productGateway := gateway.NewProductGateway(productDbAdapter)
 	productUseCase := usecase.NewProductUseCase(productGateway)
@@ -86,7 +87,7 @@ func registerCheckoutHandler(groupServer *gin.RouterGroup, dbClient mongo.Client
 	customerDbAdapter := mongodb.NewMongoAdapter[entity.Customer](
 		dbClient,
 		config.GetMongoCfg().Database,
-		entity.Customer{}.CollectionName(),
+		constants.CustomerCollection,
 	)
 	customerGateway := gateway.NewCustomerGateway(customerDbAdapter)
 	customerUseCase := usecase.NewCustomerUseCase(customerGateway)
@@ -94,7 +95,7 @@ func registerCheckoutHandler(groupServer *gin.RouterGroup, dbClient mongo.Client
 	orderDbAdapter := mongodb.NewMongoAdapter[entity.Order](
 		dbClient,
 		config.GetMongoCfg().Database,
-		entity.Order{}.CollectionName(),
+		constants.OrderCollection,
 	)
 	orderGateway := gateway.NewOrderGateway(orderDbAdapter)
 	orderUseCase := usecase.NewOrderUseCase(orderGateway, productUseCase, customerUseCase)

@@ -21,7 +21,3 @@ func (c *Customer) ToMongo() map[string]interface{} {
 		"email": c.Email,
 	}
 }
-
-func (c Customer) CollectionName() string {
-	return "customer"
-}
