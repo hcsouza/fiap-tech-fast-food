@@ -18,9 +18,9 @@ type orderHandler struct {
 	interactor interfaces.OrderController
 }
 
-func NewOrderHandler(gRouter *gin.RouterGroup, interactor *interfaces.OrderController) {
+func NewOrderHandler(gRouter *gin.RouterGroup, interactor interfaces.OrderController) {
 	handler := &orderHandler{
-		interactor: *interactor,
+		interactor: interactor,
 	}
 
 	gRouter.GET("/order", handler.FindAllHandler)

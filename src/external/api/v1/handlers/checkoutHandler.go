@@ -18,9 +18,9 @@ type checkoutHandler struct {
 	interactor interfaces.CheckoutController
 }
 
-func NewCheckoutHandler(gRouter *gin.RouterGroup, interactor *interfaces.CheckoutController) {
+func NewCheckoutHandler(gRouter *gin.RouterGroup, interactor interfaces.CheckoutController) {
 	handler := &checkoutHandler{
-		interactor: *interactor,
+		interactor: interactor,
 	}
 
 	gRouter.POST("/checkout/:id", handler.CreateCheckout)

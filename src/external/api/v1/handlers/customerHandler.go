@@ -31,9 +31,9 @@ func init() {
 	}
 }
 
-func NewCustomerHandler(gRouter *gin.RouterGroup, interactor *interfaces.CustomerController) {
+func NewCustomerHandler(gRouter *gin.RouterGroup, interactor interfaces.CustomerController) {
 	handler := &customerHandler{
-		interactor: *interactor,
+		interactor: interactor,
 	}
 
 	gRouter.GET("/customer", handler.GetCustomerHandler)

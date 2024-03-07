@@ -14,9 +14,9 @@ type productHandler struct {
 	interactor interfaces.ProductController
 }
 
-func NewProductHandler(gRouter *gin.RouterGroup, interactor *interfaces.ProductController) {
+func NewProductHandler(gRouter *gin.RouterGroup, interactor interfaces.ProductController) {
 	handler := &productHandler{
-		interactor: *interactor,
+		interactor: interactor,
 	}
 
 	gRouter.GET("/product", handler.GetAllProductsHandler)
