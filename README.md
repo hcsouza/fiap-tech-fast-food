@@ -18,6 +18,12 @@ This api was built using [Golang](https://golang.org/) and some tools:
  * [kubernetes](https://kubernetes.io/pt-br/) - Tool to automate deployment, scaling, and management of containerized applications
 
 
+### Architecture
+Demonstration: https://youtu.be/K7y3UWxIGY8
+
+![arch-fiap-tech-food](https://github.com/hcsouza/fiap-tech-fast-food/assets/40570205/0e42bb30-6065-4ff1-92a0-99b6139f4995)
+
+
 ### Requests flow
 Based on postman collection request names, the requests flow is:
 ```mermaid
