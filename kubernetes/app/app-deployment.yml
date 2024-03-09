@@ -5,7 +5,7 @@ metadata:
   labels:
     app: fiap-tech-fast-food-app
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: fiap-tech-fast-food-app
@@ -22,7 +22,8 @@ spec:
             - containerPort: 8080
           resources:
             requests:
-              cpu: 10m
+              memory: 600M
+              cpu: 200m
           livenessProbe:
             httpGet:
               path: /health/liveness
