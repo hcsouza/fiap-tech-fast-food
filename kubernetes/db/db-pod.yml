@@ -10,3 +10,11 @@ spec:
       image: mongo:latest
       ports:
         - containerPort: 27017
+      volumeMounts:
+        - mountPath: /data/db
+          name: db-pv
+  volumes:
+    - name: db-pv
+      persistentVolumeClaim:
+        claimName: db-pvc
+  restartPolicy: Always
