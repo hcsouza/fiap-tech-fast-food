@@ -28,7 +28,14 @@ type MongoConfig struct {
 }
 
 type Api struct {
-	Port string `mapstructure:"port"`
+	Port       string     `mapstructure:"port"`
+	AuthConfig AuthConfig `mapstructure:"authconfig"`
+}
+
+type AuthConfig struct {
+	UserPoolId string
+	ClientId   string
+	TokenUse   string
 }
 
 func init() {
