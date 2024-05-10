@@ -10,8 +10,18 @@ import (
 	cognitoJwtVerify "github.com/jhosan7/cognito-jwt-verify"
 )
 
-func CheckAccessToken() gin.HandlerFunc {
+func CheckAccessToken(allowedRoutes ...string) gin.HandlerFunc {
+	allowed := make(map[string]bool)
+	for _, route := range allowedRoutes {
+		allowed[route] = true
+	}
+
 	return func(c *gin.Context) {
+		if allowed[c.Request.URL.Path] {
+			c.Next()
+			return
+		}
+
 		authorizationHeader := c.GetHeader("Authorization")
 		if authorizationHeader == "" {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Authorization header is missing"})

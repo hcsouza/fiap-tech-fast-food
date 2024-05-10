@@ -15,6 +15,7 @@ import (
 	"github.com/hcsouza/fiap-tech-fast-food/src/common/interfaces"
 	"github.com/hcsouza/fiap-tech-fast-food/src/core/entity"
 	vo "github.com/hcsouza/fiap-tech-fast-food/src/core/valueObject"
+	"github.com/hcsouza/fiap-tech-fast-food/src/external/auth"
 )
 
 type customerHandler struct {
@@ -38,6 +39,7 @@ func NewCustomerHandler(gRouter *gin.RouterGroup, interactor interfaces.Customer
 
 	gRouter.GET("/customer", handler.GetCustomerHandler)
 	gRouter.POST("/customer", handler.CreateCustomerHandler)
+	gRouter.GET("customer/authorization", handler.GetAuthorizationTokenHandler)
 
 }
 
@@ -101,6 +103,33 @@ func (handler *customerHandler) GetCustomerHandler(ctx *gin.Context) {
 	customer = actions
 
 	ctx.JSON(http.StatusOK, customer)
+}
+
+// Get AuthToken godoc
+// @Summary Get authorization token by CPF
+// @Description Get authorization tokenCPF
+// @Tags Customer Routes
+// @Param        cpf    query     string  true  "19119119100"
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} auth.AuthorizationToken{}
+// @Router /api/v1/customer/authorization [get]
+func (handler *customerHandler) GetAuthorizationTokenHandler(ctx *gin.Context) {
+	cpf := ctx.Query("cpf")
+	var authToken *auth.AuthorizationToken // Only to swaggo doc
+
+	authToken, err := auth.GetAuthorizationToken(cpf)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if len(authToken.AccessToken) < 1 || err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "cannot generate authorization token"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, authToken)
 }
 
 func CpfValidator(fl validator.FieldLevel) bool {

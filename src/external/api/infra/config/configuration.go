@@ -28,8 +28,9 @@ type MongoConfig struct {
 }
 
 type Api struct {
-	Port       string     `mapstructure:"port"`
-	AuthConfig AuthConfig `mapstructure:"authconfig"`
+	Port                 string     `mapstructure:"port"`
+	AuthConfig           AuthConfig `mapstructure:"authconfig"`
+	AuthorizationBaseUrl string     `mapstructure:"authorizationUrl"`
 }
 
 type AuthConfig struct {
