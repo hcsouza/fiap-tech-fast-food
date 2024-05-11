@@ -1,5 +1,7 @@
 .vscode
 
-internal/adapter/infra/config/configs.yaml
+internal/adapter/infra/config/configs.yaml 
+
+/src/external/api/infra/config/configs.yaml
 
 /tmp

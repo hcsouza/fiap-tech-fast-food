@@ -5,3 +5,8 @@ mongodb:
   database: "db"
 api:
   port: "8080"
+  authconfig:
+   userPoolId: "pooldID"
+   clientId:   "cid"
+   tokenUse:   "access"
+  authorizationUrl: "https://apigateway.com/default/food-fiap-auth"
